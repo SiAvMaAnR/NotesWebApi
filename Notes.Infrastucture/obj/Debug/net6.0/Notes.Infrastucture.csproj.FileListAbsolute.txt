@@ -1,0 +1,15 @@
+D:\source\repos\Notes\Notes.Infrastucture\bin\Debug\net6.0\Notes.Infrastucture.deps.json
+D:\source\repos\Notes\Notes.Infrastucture\bin\Debug\net6.0\Notes.Infrastucture.dll
+D:\source\repos\Notes\Notes.Infrastucture\bin\Debug\net6.0\Notes.Infrastucture.pdb
+D:\source\repos\Notes\Notes.Infrastucture\bin\Debug\net6.0\Notes.Domain.dll
+D:\source\repos\Notes\Notes.Infrastucture\bin\Debug\net6.0\Notes.Domain.pdb
+D:\source\repos\Notes\Notes.Infrastucture\obj\Debug\net6.0\Notes.Infrastucture.csproj.AssemblyReference.cache
+D:\source\repos\Notes\Notes.Infrastucture\obj\Debug\net6.0\Notes.Infrastucture.GeneratedMSBuildEditorConfig.editorconfig
+D:\source\repos\Notes\Notes.Infrastucture\obj\Debug\net6.0\Notes.Infrastucture.AssemblyInfoInputs.cache
+D:\source\repos\Notes\Notes.Infrastucture\obj\Debug\net6.0\Notes.Infrastucture.AssemblyInfo.cs
+D:\source\repos\Notes\Notes.Infrastucture\obj\Debug\net6.0\Notes.Infrastucture.csproj.CoreCompileInputs.cache
+D:\source\repos\Notes\Notes.Infrastucture\obj\Debug\net6.0\Notes.Infrastucture.csproj.CopyComplete
+D:\source\repos\Notes\Notes.Infrastucture\obj\Debug\net6.0\Notes.Infrastucture.dll
+D:\source\repos\Notes\Notes.Infrastucture\obj\Debug\net6.0\refint\Notes.Infrastucture.dll
+D:\source\repos\Notes\Notes.Infrastucture\obj\Debug\net6.0\Notes.Infrastucture.pdb
+D:\source\repos\Notes\Notes.Infrastucture\obj\Debug\net6.0\ref\Notes.Infrastucture.dll
