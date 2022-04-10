@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Notes.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,13 +12,13 @@ namespace Notes.Domain.Models
     {
         public int Id { get; set; }
 
-        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public byte[] PasswordHash { get; set; }
 
-        public string? Role { get; set; }
+        public byte[] PasswordSalt { get; set; }
+
+        public string Role { get; set; }
 
         public Person Person { get; set; }
 

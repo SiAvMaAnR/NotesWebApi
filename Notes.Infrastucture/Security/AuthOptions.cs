@@ -1,23 +1,78 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Notes.Domain.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Notes.Infrastructure.Security
 {
-    public class AuthOptions
+    public static class AuthOptions
     {
-        public const string ISSUER = "Server"; // издатель токена
-        public const string AUDIENCE = "Client"; // потребитель токена
-        const string KEY = "SecretKey61";   // ключ для шифрации
-        public const int LIFETIME = 5; // время жизни токена - 1 минута
-
-
-        public static SymmetricSecurityKey GetSymmetricSecurityKey()
+        public static Task<string> CreateTokenAsync(User user, string secretKey)
         {
-            return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(KEY));
+            return Task.Run(() =>
+            {
+                try
+                {
+                    List<Claim> claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, user.Email),
+                        new Claim(ClaimTypes.Role, user.Role)
+                    };
+
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+
+                    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+                    var token = new JwtSecurityToken(
+                        claims: claims,
+                        expires: DateTime.Now.AddMinutes(20),
+                        signingCredentials: creds);
+
+                    return new JwtSecurityTokenHandler().WriteToken(token);
+                }
+                catch
+                {
+                    return "";
+                }
+                
+            });
+        }
+
+        public static bool CreatePasswordHash(string password, out byte[]? passwordHash, out byte[]? passwordSalt)
+        {
+            try
+            {
+                using (var hmac = new HMACSHA512())
+                {
+                    passwordSalt = hmac.Key;
+                    passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                }
+                return true;
+            }
+            catch
+            {
+                passwordSalt = default;
+                passwordHash = default;
+                return false;
+            }
+        }
+
+        public static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        {
+            try
+            {
+                using (var hmac = new HMACSHA512(passwordSalt))
+                {
+                    var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                    return computedHash.SequenceEqual(passwordHash);
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

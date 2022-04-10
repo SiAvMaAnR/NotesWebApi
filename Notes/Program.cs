@@ -1,49 +1,52 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Infrastructure.Security;
+using Swashbuckle.AspNetCore.Filters;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
-
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddCors();
-
-builder.Services.AddDbContext<EFContext>(options => options
-    .UseSqlServer(connection));
-
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddLogging();
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(configureOptions =>
+builder.Services.AddCors();
+builder.Services.AddDbContext<EFContext>(options => options.UseSqlServer(connection));
+builder.Services.AddAuthorization();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
-        configureOptions.RequireHttpsMetadata = false;
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey
+    });
 
-        configureOptions.TokenValidationParameters = new TokenValidationParameters()
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
+});
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = true,
-            ValidIssuer = AuthOptions.ISSUER,
-
-            ValidateAudience = true,
-            ValidAudience = AuthOptions.AUDIENCE,
-
-            ValidateLifetime = true,
-
-            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+            ValidateIssuer = false,
+            ValidateAudience = false,
             ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(builder.Configuration.GetSection("Authorization:SecretKey").Value)),
         };
     });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -55,10 +58,13 @@ app.UseCors(builder => builder
     .AllowAnyHeader()
     .AllowAnyMethod());
 
-app.UseHttpsRedirection();
-app.UseAuthorization();
+app.UseRouting();
+
 app.UseAuthentication();
+app.UseAuthorization();
+
+
+app.UseHttpsRedirection();
 
 app.MapControllers();
-
 app.Run();

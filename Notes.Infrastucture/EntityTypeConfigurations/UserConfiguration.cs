@@ -10,7 +10,8 @@ namespace Notes.Infrastructure.EntityTypeConfigurations
         {
             builder.Property(x => x.Email).HasMaxLength(100).IsRequired();
             builder.HasIndex(x => x.Email).IsUnique();
-            builder.Property(x => x.Password).HasMaxLength(100).IsRequired();
+            builder.Property(x => x.PasswordHash).IsRequired();
+            builder.Property(x => x.PasswordSalt).IsRequired();
         }
     }
 }

@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Notes.Domain.Enums;
 using Notes.Domain.Models;
 using Notes.Infrastructure.ApplicationContext;
 
@@ -11,13 +13,13 @@ namespace Notes.Api.Presentation.RestApi.Controllers
     [ApiController]
     public class TaskController : ControllerBase
     {
-        private readonly EFContext eFContext;
+        private readonly EFContext context;
         private readonly ILogger logger;
         private readonly IConfiguration configuration;
 
-        public TaskController(EFContext eFContext, ILogger<TaskController> logger, IConfiguration configuration)
+        public TaskController(EFContext context, ILogger<TaskController> logger, IConfiguration configuration)
         {
-            this.eFContext = eFContext;
+            this.context = context;
             this.logger = logger;
             this.configuration = configuration;
         }
@@ -41,18 +43,18 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             //    Age = 18,
             //};
 
-            //eFContext.Persons.AddRange(person, person1);
+            //context.Persons.AddRange(person, person1);
 
             //User user = new User()
             //{
             //    Email = "samarkin20022002@gmail.com",
-            //    Password = "Sosnova61S",
-            //    Role = "Admin",
+            //    PasswordHash = "Sosnova61S",
+            //    Role = Roles.Admin.ToString(),
             //    Person = person
             //};
 
 
-            //eFContext.Users.AddRange(user);
+            //context.Users.AddRange(user);
 
             //Note note = new Note()
             //{
@@ -63,13 +65,13 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             //    User = user
             //};
 
-            //eFContext.Notes.AddRange(note);
-            //eFContext.SaveChanges();
+            //context.Notes.AddRange(note);
+            //context.SaveChanges();
 
-            //int id = eFContext.Notes.First().Id;
+            ////int id = eFContext.Notes.First().Id;
 
-            //var _user = eFContext.Users.First(x => x.Id == id);
-            //return _user.Id + _user.Person.Name;
+            ////var _user = eFContext.Users.First(x => x.Id == id);
+            ////return _user.Id + _user.Person.Name;
 
             #endregion
 

@@ -10,7 +10,6 @@ namespace Notes.Infrastructure.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<Person> builder)
         {
             builder.Property(x => x.Name).HasMaxLength(100).IsRequired();
-            builder.HasIndex(x => x.Name).IsUnique();
         }
     }
 }
