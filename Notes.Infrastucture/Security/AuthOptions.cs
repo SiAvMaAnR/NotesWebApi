@@ -17,9 +17,13 @@ namespace Notes.Infrastructure.Security
                 {
                     List<Claim> claims = new List<Claim>
                     {
-                        new Claim(ClaimTypes.Name, user.Email),
+                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                        new Claim(ClaimTypes.Name, user.Person?.Name ?? "NONE"),
+                        new Claim(ClaimTypes.Email, user.Email),
                         new Claim(ClaimTypes.Role, user.Role)
                     };
+
+                    ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimTypes.Name, ClaimTypes.Role);
 
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
@@ -27,7 +31,7 @@ namespace Notes.Infrastructure.Security
 
                     var token = new JwtSecurityToken(
                         claims: claims,
-                        expires: DateTime.Now.AddMinutes(20),
+                        expires: DateTime.Now.AddMinutes(30),
                         signingCredentials: creds);
 
                     return new JwtSecurityTokenHandler().WriteToken(token);
@@ -36,7 +40,7 @@ namespace Notes.Infrastructure.Security
                 {
                     return "";
                 }
-                
+
             });
         }
 

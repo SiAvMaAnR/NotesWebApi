@@ -3,8 +3,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Notes.Domain.Models;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Infrastructure.Security;
+using Notes.Infrastucture.Interfaces;
+using Notes.Infrastucture.Repositories;
+using Notes.Interfaces;
+using Notes.Services;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
@@ -19,6 +24,10 @@ builder.Services.AddLogging();
 builder.Services.AddCors();
 builder.Services.AddDbContext<EFContext>(options => options.UseSqlServer(connection));
 builder.Services.AddAuthorization();
+
+
+builder.Services.AddScoped<IAsyncRepository<Note>, NotesRepository>();
+builder.Services.AddScoped<INoteService, NotesService>();
 
 builder.Services.AddSwaggerGen(options =>
 {

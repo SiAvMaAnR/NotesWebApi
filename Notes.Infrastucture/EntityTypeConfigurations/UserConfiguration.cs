@@ -12,6 +12,7 @@ namespace Notes.Infrastructure.EntityTypeConfigurations
             builder.HasIndex(x => x.Email).IsUnique();
             builder.Property(x => x.PasswordHash).IsRequired();
             builder.Property(x => x.PasswordSalt).IsRequired();
+            builder.Property(x => x.PersonId).IsRequired();
         }
     }
 }

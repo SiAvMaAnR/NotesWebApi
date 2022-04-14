@@ -1,19 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
+using Notes.Domain.Enums;
 using Notes.Domain.Models;
+using Notes.DTOs.Auth;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Infrastructure.Security;
-using Notes.ViewModels;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Notes.Domain.Enums;
-using Microsoft.EntityFrameworkCore;
 
 namespace Notes.Api.Presentation.RestApi.Controllers
 {
@@ -31,13 +24,15 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             this.configuration = configuration;
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, Authorize(Roles = "User,Admin")]
         public ActionResult<string> Get()
         {
             return Ok(new
             {
-                userName = HttpContext?.User.FindFirstValue(ClaimTypes.Name) ?? "NONE",
-                userRole = HttpContext?.User.FindFirstValue(ClaimTypes.Role) ?? "NONE"
+                userNameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "NONE",
+                userName = User.FindFirstValue(ClaimTypes.Name) ?? "NONE",
+                userRole = User.FindFirstValue(ClaimTypes.Role) ?? "NONE",
+                userEmail = User.FindFirstValue(ClaimTypes.Email) ?? "NONE"
             });
 
         }
@@ -50,13 +45,13 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 if (context.Users.Any(user => user.Email == register.Email))
                     return BadRequest(new
                     {
-                        error_message = "Такой пользователь уже существует!"
+                        Response = "This user already exists!",
                     });
 
                 if (!ModelState.IsValid)
                     return BadRequest(new
                     {
-                        errorMessage = "Не корректные данные!"
+                        Response = "Incorrect data!",
                     });
 
                 if (AuthOptions.CreatePasswordHash(register.Password, out byte[]? passwordHash, out byte[]? passwordSalt))
@@ -75,23 +70,24 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     });
 
                     await context.SaveChangesAsync();
-                    return Ok("Пользователь успешно добавлен");
+                    return Ok("Success");
                 }
 
                 return BadRequest(new
                 {
-                    errorMessage = "Не удалось создать аккаунт!"
+                    errorMessage = "Failed to create an account!"
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    errorMessage = "Не удалось создать аккаунт!"
+                    errorMessage = "Failed to create an account!"
                 });
             }
 
         }
+
 
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login([FromBody] LoginDto login)
@@ -101,25 +97,17 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 var user = await context.Users.FirstOrDefaultAsync(user => user.Email == login.Email);
 
                 if (user == null)
-                    return BadRequest(new
-                    {
-                        errorMessage = "Пользователь не найден!"
-                    });
+                    return BadRequest(new { errorMessage = "User is not found!" });
 
                 if (!AuthOptions.VerifyPasswordHash(login.Password, user.PasswordHash, user.PasswordSalt))
-                    return BadRequest(new
-                    {
-                        errorMessage = "Не верный пароль!"
-                    });
-
+                    return BadRequest(new { errorMessage = "Incorrect password!" });
 
                 string secretKey = configuration.GetSection("Authorization:SecretKey").Value;
 
                 if (string.IsNullOrEmpty(secretKey))
-                    return BadRequest(new
-                    {
-                        errorMessage = "Не удалось создать токен!"
-                    });
+                    return BadRequest(new { errorMessage = "Failed to create token!" });
+
+                context.Entry(user).Reference(x => x.Person).Load();
 
                 return Ok(new
                 {
@@ -130,13 +118,10 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             {
                 return BadRequest(new
                 {
-                    errorMessage = "Не удалось создать токен!"
+                    errorMessage = "Failed to create token!"
                 });
             }
 
         }
-
-
-
     }
 }

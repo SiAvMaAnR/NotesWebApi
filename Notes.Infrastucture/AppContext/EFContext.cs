@@ -15,13 +15,11 @@ namespace Notes.Infrastructure.ApplicationContext
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Person> Persons { get; set; } = null!;
 
-
         public EFContext(DbContextOptions<EFContext> options) : base(options)
         {
             //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,14 +27,12 @@ namespace Notes.Infrastructure.ApplicationContext
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new PersonConfiguration());
 
-
-
-
             base.OnModelCreating(modelBuilder);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+
         }
     }
 }

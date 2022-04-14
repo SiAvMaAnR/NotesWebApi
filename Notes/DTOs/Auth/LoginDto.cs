@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Notes.ViewModels
+namespace Notes.DTOs.Auth
 {
     public class LoginDto
     {
