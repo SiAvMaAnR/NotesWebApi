@@ -7,7 +7,9 @@ using Notes.DTOs.Notes.GetListNote;
 using Notes.DTOs.Notes.GetNote;
 using Notes.DTOs.Notes.UpdateNote;
 using Notes.Infrastructure.ApplicationContext;
+using Notes.Infrastructure.Security;
 using Notes.Infrastucture.Interfaces;
+using Notes.Infrastucture.Security;
 using Notes.Interfaces;
 using System.Linq.Expressions;
 using System.Security.Claims;
@@ -19,14 +21,11 @@ namespace Notes.Services
         public NotesService(IAsyncRepository<Note> repository, EFContext context)
             : base(repository, context)
         {
-
         }
 
         public async Task<AddNoteResponse> AddNoteAsync(AddNoteRequest request)
         {
-            string currentEmail = request.User.FindFirst(ClaimTypes.Email)?.Value ?? "";
-
-            User? user = await context.Users.FirstOrDefaultAsync(u => u.Email == currentEmail);
+            User? user = await CurrentUser.GetUserAsync(context, request.User);
 
             if (user != null)
             {
@@ -69,12 +68,24 @@ namespace Notes.Services
 
         public async Task<GetListNoteResponse> GetListNoteAsync(GetListNoteRequest request)
         {
-            IEnumerable<Note>? result = (await repository.GetAllAsync())?
-                .Skip(request.PageNumber * request.PageSize)
-                .Take(request.PageSize);
+            IEnumerable<Note>? notes = await repository.GetAllAsync();
 
-            if (result != null)
+            if (notes != null)
             {
+                switch (request.Sort)
+                {
+                    case "asc_date":
+                        notes = notes?.OrderBy(x => x.CreateDate);
+                        break;
+                    case "desc_date":
+                        notes = notes?.OrderByDescending(x => x.CreateDate);
+                        break;
+                };
+
+                var result = notes?
+                    .Skip(request.PageNumber * request.PageSize)
+                    .Take(request.PageSize);
+
                 var totalNotes = context.Notes.ToList().Count;
                 var tatalPages = (int)Math.Ceiling(((decimal)totalNotes / request.PageSize));
 

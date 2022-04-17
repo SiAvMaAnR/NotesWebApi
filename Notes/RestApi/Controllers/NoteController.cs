@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Notes.Domain.Enums;
 using Notes.Domain.Models;
 using Notes.DTOs;
+using Notes.DTOs.Notes.AddNote;
 using Notes.DTOs.Notes.Controller;
 using Notes.DTOs.Notes.GetListNote;
 using Notes.Infrastructure.ApplicationContext;
@@ -46,7 +47,6 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     data = new
                     {
                         Notes = result.Notes,
-                        Response = result.Response,
                         PageNumber = result.PageNumber,
                         PageSize = result.PageSize,
                         TotalNotes = result.TotalNotes,
@@ -72,7 +72,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
         {
             try
             {
-                var result = await service.AddNoteAsync(new DTOs.Notes.AddNote.AddNoteRequest()
+                var result = await service.AddNoteAsync(new AddNoteRequest()
                 {
                     Title = noteDto.Title,
                     Description = noteDto.Description,

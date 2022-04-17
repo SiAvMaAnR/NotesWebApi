@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -11,6 +12,7 @@ using Notes.Infrastucture.Repositories;
 using Notes.Interfaces;
 using Notes.Services;
 using Swashbuckle.AspNetCore.Filters;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,7 +26,6 @@ builder.Services.AddLogging();
 builder.Services.AddCors();
 builder.Services.AddDbContext<EFContext>(options => options.UseSqlServer(connection));
 builder.Services.AddAuthorization();
-
 
 builder.Services.AddScoped<IAsyncRepository<Note>, NotesRepository>();
 builder.Services.AddScoped<INoteService, NotesService>();
@@ -44,6 +45,8 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = false,
