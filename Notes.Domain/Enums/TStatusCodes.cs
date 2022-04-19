@@ -19,7 +19,7 @@ namespace Notes.Domain.Enums
         /// <summary>
         /// Запрос прошел успешно, без контента
         /// </summary>
-        NoContent = 204,
+        No_Content = 204,
         /// <summary>
         /// URL страницы изменен
         /// </summary>

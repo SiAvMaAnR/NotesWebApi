@@ -27,13 +27,30 @@ namespace Notes.Api.Presentation.RestApi.Controllers
         [HttpGet("/my"), Authorize(Roles = "User,Admin")]
         public IActionResult Get()
         {
-            return Ok(new
+            try
             {
-                userNameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "NONE",
-                userName = User.FindFirstValue(ClaimTypes.Name) ?? "NONE",
-                userRole = User.FindFirstValue(ClaimTypes.Role) ?? "NONE",
-                userEmail = User.FindFirstValue(ClaimTypes.Email) ?? "NONE"
-            });
+                return Ok(new
+                {
+                    data = new
+                    {
+                        userNameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "NONE",
+                        userName = User.FindFirstValue(ClaimTypes.Name) ?? "NONE",
+                        userRole = User.FindFirstValue(ClaimTypes.Role) ?? "NONE",
+                        userEmail = User.FindFirstValue(ClaimTypes.Email) ?? "NONE"
+                    },
+                    title = "Success!",
+                    status = TStatusCodes.OK
+                });
+            }
+            catch (Exception)
+            {
+                return BadRequest(new
+                {
+                    title = "User not found!",
+                    status = TStatusCodes.Bad_Request
+                });
+            }
+            
 
         }
 
@@ -69,6 +86,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     });
 
                     await context.SaveChangesAsync();
+
                     return Ok(new
                     {
                         title = "Success!",
@@ -102,10 +120,10 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 User? user = await context.Users.FirstOrDefaultAsync(user => user.Email == login.Email);
 
                 if (user == null)
-                    return BadRequest(new
+                    return NotFound(new
                     {
                         title = "User is not found!",
-                        status = TStatusCodes.Bad_Request
+                        status = TStatusCodes.Not_Found
                     });
 
                 if (!AuthOptions.VerifyPasswordHash(login.Password, user.PasswordHash, user.PasswordSalt))
@@ -134,7 +152,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                         type = "Bearer"
                     },
 
-                    title = "Success",
+                    title = "Success!",
                     status = TStatusCodes.OK,
                 });
             }

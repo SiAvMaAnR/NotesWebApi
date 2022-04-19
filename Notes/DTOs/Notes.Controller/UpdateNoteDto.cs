@@ -2,8 +2,11 @@
 
 namespace Notes.DTOs.Notes.Controller
 {
-    public class NoteDto
+    public class UpdateNoteDto
     {
+        [Required]
+        public int Id { get; set; }
+
         [Required]
         [StringLength(100, MinimumLength = 1)]
         public string Title { get; set; }

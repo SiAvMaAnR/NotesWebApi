@@ -66,3 +66,4 @@ D:\source\repos\Notes\Notes\bin\Debug\net6.0\Microsoft.Extensions.DependencyMode
 D:\source\repos\Notes\Notes\bin\Debug\net6.0\Scrutor.dll
 D:\source\repos\Notes\Notes\bin\Debug\net6.0\Swashbuckle.AspNetCore.Filters.dll
 D:\source\repos\Notes\Notes\bin\Debug\net6.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
+D:\source\repos\Notes\Notes\bin\Debug\net6.0\Newtonsoft.Json.dll

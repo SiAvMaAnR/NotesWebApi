@@ -13,6 +13,6 @@ namespace Notes.Infrastucture.Interfaces
         Task UpdateAsync(TEntity entity);
         Task DeleteAsync(TEntity entity);
         Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate);
-        Task<IEnumerable<TEntity>?> GetAllAsync();
+        Task<IEnumerable<TEntity>?> GetAllAsync(Expression<Func<TEntity, bool>> predicate);
     }
 }

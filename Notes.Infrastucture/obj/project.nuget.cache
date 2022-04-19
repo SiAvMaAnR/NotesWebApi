@@ -1,13 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "F9z+9eQi3177BOoRn1UdXUDQTfG53KXmrDRWdY9bGIZY/LK2fsL5o6S/KBfwddBjt7tkNRuUxcKxCI+0m3Rd2g==",
+  "dgSpecHash": "pNzvDXwWW4ady2uLxyx6CCyLl+AIQwgLHd98RpsUGBeZGMogIKj093XPb7l7hlTLtJs7ErI8HzmbWCQosNJR4g==",
   "success": true,
   "projectFilePath": "D:\\source\\repos\\Notes\\Notes.Infrastucture\\Notes.Infrastucture.csproj",
   "expectedPackageFiles": [
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
-    "C:\\Users\\dunduk\\.nuget\\packages\\microsoft.entityframeworkcore\\6.0.3\\microsoft.entityframeworkcore.6.0.3.nupkg.sha512",
-    "C:\\Users\\dunduk\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\6.0.3\\microsoft.entityframeworkcore.abstractions.6.0.3.nupkg.sha512",
-    "C:\\Users\\dunduk\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\6.0.3\\microsoft.entityframeworkcore.analyzers.6.0.3.nupkg.sha512",
+    "C:\\Users\\dunduk\\.nuget\\packages\\microsoft.entityframeworkcore\\6.0.4\\microsoft.entityframeworkcore.6.0.4.nupkg.sha512",
+    "C:\\Users\\dunduk\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\6.0.4\\microsoft.entityframeworkcore.abstractions.6.0.4.nupkg.sha512",
+    "C:\\Users\\dunduk\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\6.0.4\\microsoft.entityframeworkcore.analyzers.6.0.4.nupkg.sha512",
     "C:\\Users\\dunduk\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\6.0.0\\microsoft.extensions.caching.abstractions.6.0.0.nupkg.sha512",
     "C:\\Users\\dunduk\\.nuget\\packages\\microsoft.extensions.caching.memory\\6.0.1\\microsoft.extensions.caching.memory.6.0.1.nupkg.sha512",
     "C:\\Users\\dunduk\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\6.0.0\\microsoft.extensions.configuration.abstractions.6.0.0.nupkg.sha512",

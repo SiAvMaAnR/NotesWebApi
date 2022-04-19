@@ -14,7 +14,7 @@ namespace Notes.Infrastucture.Security
     {
         public static async Task<string> GetEmailAsync(ClaimsPrincipal claimsPrincipal)
         {
-            return await Task.Run(() => claimsPrincipal.FindFirst(ClaimTypes.Email)?.Value ?? "");
+            return await Task.Run(() => claimsPrincipal?.FindFirst(ClaimTypes.Email)?.Value ?? "");
         }
 
         public static async Task<User?> GetUserAsync(EFContext context, string email)

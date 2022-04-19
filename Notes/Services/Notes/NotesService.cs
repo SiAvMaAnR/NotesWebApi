@@ -43,8 +43,6 @@ namespace Notes.Services
                 return new AddNoteResponse()
                 {
                     Note = note,
-                    Response = "Success",
-                    StatusCode = TStatusCodes.OK
                 };
             }
             else
@@ -52,41 +50,49 @@ namespace Notes.Services
                 return new AddNoteResponse()
                 {
                     Note = null,
-                    Response = "User not found!",
-                    StatusCode = TStatusCodes.Bad_Request
                 };
             }
         }
 
         public async Task<DeleteNoteResponse> DeleteNoteAsync(DeleteNoteRequest request)
         {
-            return new DeleteNoteResponse()
-            {
+            User? user = await CurrentUser.GetUserAsync(context, request.User);
 
-            };
+            Note? note = await repository.GetAsync(note => note.Id == request.Id && user!.Id == note.UserId);
+
+            if(note != null)
+            {
+                await repository.DeleteAsync(note);
+                return new DeleteNoteResponse(true);
+            }
+
+            return new DeleteNoteResponse(false);
         }
 
         public async Task<GetListNoteResponse> GetListNoteAsync(GetListNoteRequest request)
         {
-            IEnumerable<Note>? notes = await repository.GetAllAsync();
+            User? user = await CurrentUser.GetUserAsync(context, request.User);
+
+            IEnumerable<Note>? notes = await repository.GetAllAsync(note => user!.Id == note.UserId);
 
             if (notes != null)
             {
                 switch (request.Sort)
                 {
                     case "asc_date":
-                        notes = notes?.OrderBy(x => x.CreateDate);
+                        notes = notes?.OrderBy(note => note.CreateDate);
                         break;
                     case "desc_date":
-                        notes = notes?.OrderByDescending(x => x.CreateDate);
+                        notes = notes?.OrderByDescending(note => note.CreateDate);
                         break;
                 };
+
+                var totalNotes = notes?.ToList().Count ?? 0;
 
                 var result = notes?
                     .Skip(request.PageNumber * request.PageSize)
                     .Take(request.PageSize);
 
-                var totalNotes = context.Notes.ToList().Count;
                 var tatalPages = (int)Math.Ceiling(((decimal)totalNotes / request.PageSize));
 
                 return new GetListNoteResponse()
@@ -96,8 +102,6 @@ namespace Notes.Services
                     PageNumber = request.PageNumber,
                     TotalNotes = totalNotes,
                     TotalPages = tatalPages,
-                    Response = "Success",
-                    StatusCode = TStatusCodes.OK
                 };
             }
             else
@@ -105,8 +109,6 @@ namespace Notes.Services
                 return new GetListNoteResponse()
                 {
                     Notes = null,
-                    Response = "Notes not found!",
-                    StatusCode = TStatusCodes.Bad_Request
                 };
             }
 
@@ -114,18 +116,33 @@ namespace Notes.Services
 
         public async Task<GetNoteResponse> GetNoteAsync(GetNoteRequest request)
         {
+            User? user = await CurrentUser.GetUserAsync(context, request.User);
+
+            Note? note = await repository.GetAsync(note => note.Id == request.Id && user!.Id == note.UserId);
+
             return new GetNoteResponse()
             {
-
+                Note = note
             };
         }
 
         public async Task<UpdateNoteResponse> UpdateNoteAsync(UpdateNoteRequest request)
         {
-            return new UpdateNoteResponse()
-            {
+            User? user = await CurrentUser.GetUserAsync(context, request.User);
 
-            };
+            Note? note = await repository.GetAsync(note => note.Id == request.Id && user!.Id == note.UserId);
+
+            if(note != null)
+            {
+                note.Title = request.Title;
+                note.Description = request.Description;
+                note.IsDone = request.IsDone;
+
+                await repository.UpdateAsync(note);
+
+                return new UpdateNoteResponse(true);
+            }
+            return new UpdateNoteResponse(false);
         }
     }
 }

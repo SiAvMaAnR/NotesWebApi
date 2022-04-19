@@ -39,9 +39,9 @@ namespace Notes.Infrastructure.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<TEntity>?> GetAllAsync()
+        public async Task<IEnumerable<TEntity>?> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await dbSet.ToListAsync();
+            return await dbSet.Where(predicate).ToListAsync();
         }
 
         public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate)
