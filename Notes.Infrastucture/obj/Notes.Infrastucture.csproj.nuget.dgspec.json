@@ -110,7 +110,7 @@
           "dependencies": {
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[6.0.3, )"
+              "version": "[6.0.4, )"
             },
             "Microsoft.Extensions.Configuration.Abstractions": {
               "target": "Package",

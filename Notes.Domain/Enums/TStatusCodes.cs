@@ -13,6 +13,14 @@ namespace Notes.Domain.Enums
         /// </summary>
         OK = 200,
         /// <summary>
+        /// Успешное создание объекта
+        /// </summary>
+        Created = 201,
+        /// <summary>
+        /// Запрос прошел успешно, без контента
+        /// </summary>
+        No_Content = 204,
+        /// <summary>
         /// URL страницы изменен
         /// </summary>
         Moved_Permanently = 301,
@@ -28,6 +36,10 @@ namespace Notes.Domain.Enums
         /// Возникла проблема на стороне пользователя
         /// </summary>
         Bad_Request = 400,
+        /// <summary>
+        /// Возникла проблема с аутентификацией или авторизацией
+        /// </summary>
+        Unauthorized = 401,
         /// <summary>
         /// Запрет на просмотр страницы
         /// </summary>

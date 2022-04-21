@@ -24,34 +24,50 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             this.configuration = configuration;
         }
 
-        [HttpGet, Authorize(Roles = "User,Admin")]
-        public ActionResult<string> Get()
+        [HttpGet("/my"), Authorize(Roles = "User,Admin")]
+        public IActionResult Get()
         {
-            return Ok(new
+            try
             {
-                userNameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "NONE",
-                userName = User.FindFirstValue(ClaimTypes.Name) ?? "NONE",
-                userRole = User.FindFirstValue(ClaimTypes.Role) ?? "NONE",
-                userEmail = User.FindFirstValue(ClaimTypes.Email) ?? "NONE"
-            });
+                return Ok(new
+                {
+                    data = new
+                    {
+                        userNameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "NONE",
+                        userName = User.FindFirstValue(ClaimTypes.Name) ?? "NONE",
+                        userRole = User.FindFirstValue(ClaimTypes.Role) ?? "NONE",
+                        userEmail = User.FindFirstValue(ClaimTypes.Email) ?? "NONE"
+                    },
+                    title = "Success!",
+                    status = TStatusCodes.OK
+                });
+            }
+            catch (Exception)
+            {
+                return BadRequest(new
+                {
+                    title = "User not found!",
+                    status = TStatusCodes.Bad_Request
+                });
+            }
+            
 
         }
 
-        [HttpPost("register")]
+
+        [HttpPost("/register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto register)
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
                 if (context.Users.Any(user => user.Email == register.Email))
                     return BadRequest(new
                     {
-                        Response = "This user already exists!",
-                    });
-
-                if (!ModelState.IsValid)
-                    return BadRequest(new
-                    {
-                        Response = "Incorrect data!",
+                        title = "This user already exists!",
+                        status = TStatusCodes.Bad_Request
                     });
 
                 if (AuthOptions.CreatePasswordHash(register.Password, out byte[]? passwordHash, out byte[]? passwordSalt))
@@ -70,55 +86,82 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     });
 
                     await context.SaveChangesAsync();
-                    return Ok("Success");
+
+                    return Ok(new
+                    {
+                        title = "Success!",
+                        status = TStatusCodes.OK
+                    });
                 }
 
                 return BadRequest(new
                 {
-                    errorMessage = "Failed to create an account!"
+                    title = "Failed to create an account!",
+                    status = TStatusCodes.Bad_Request
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    errorMessage = "Failed to create an account!"
+                    title = "Failed to create an account!",
+                    status = TStatusCodes.Bad_Request
                 });
             }
 
         }
 
 
-        [HttpPost("login")]
-        public async Task<ActionResult<string>> Login([FromBody] LoginDto login)
+        [HttpPost("/login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto login)
         {
             try
             {
-                var user = await context.Users.FirstOrDefaultAsync(user => user.Email == login.Email);
+                User? user = await context.Users.FirstOrDefaultAsync(user => user.Email == login.Email);
 
                 if (user == null)
-                    return BadRequest(new { errorMessage = "User is not found!" });
+                    return NotFound(new
+                    {
+                        title = "User is not found!",
+                        status = TStatusCodes.Not_Found
+                    });
 
                 if (!AuthOptions.VerifyPasswordHash(login.Password, user.PasswordHash, user.PasswordSalt))
-                    return BadRequest(new { errorMessage = "Incorrect password!" });
+                    return BadRequest(new
+                    {
+                        title = "Incorrect password!",
+                        status = TStatusCodes.Bad_Request
+                    });
 
                 string secretKey = configuration.GetSection("Authorization:SecretKey").Value;
 
                 if (string.IsNullOrEmpty(secretKey))
-                    return BadRequest(new { errorMessage = "Failed to create token!" });
+                    return BadRequest(new
+                    {
+                        title = "Failed to create token!",
+                        status = TStatusCodes.Bad_Request
+                    });
 
                 context.Entry(user).Reference(x => x.Person).Load();
 
                 return Ok(new
                 {
-                    token = await AuthOptions.CreateTokenAsync(user, secretKey),
+                    data = new
+                    {
+                        token = await AuthOptions.CreateTokenAsync(user, secretKey),
+                        type = "Bearer"
+                    },
+
+                    title = "Success!",
+                    status = TStatusCodes.OK,
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    errorMessage = "Failed to create token!"
+                    title = "Failed to create token!",
+                    status = TStatusCodes.Bad_Request
                 });
             }
 

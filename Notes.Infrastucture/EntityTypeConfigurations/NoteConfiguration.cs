@@ -14,7 +14,6 @@ namespace Notes.Infrastructure.EntityTypeConfigurations
             builder.Property(x => x.Description).HasMaxLength(100);
 
             builder.Property(x => x.IsDone).IsRequired();
-
         }
     }
 }

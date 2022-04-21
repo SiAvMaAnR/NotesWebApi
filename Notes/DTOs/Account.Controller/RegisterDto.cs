@@ -4,13 +4,14 @@ namespace Notes.DTOs.Auth
 {
     public class RegisterDto
     {
-        [DataType(DataType.EmailAddress)]
         [Required]
+        [EmailAddress]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
-        [StringLength(20, MinimumLength = 6)]
-        [DataType(DataType.Password)]
         [Required]
+        [DataType(DataType.Password)]
+        [StringLength(20, MinimumLength = 6)]
         public string Password { get; set; }
 
         [StringLength(20, MinimumLength = 6)]

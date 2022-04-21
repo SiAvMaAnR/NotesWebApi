@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Notes.Domain.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -73,7 +74,7 @@ namespace Notes.Infrastructure.Security
                     return computedHash.SequenceEqual(passwordHash);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }

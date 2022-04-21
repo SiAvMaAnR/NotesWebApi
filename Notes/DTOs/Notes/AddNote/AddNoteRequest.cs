@@ -14,8 +14,5 @@ namespace Notes.DTOs.Notes.AddNote
 
         [Required]
         public bool IsDone { get; set; }
-
-
-        public ClaimsPrincipal User { get; set; }
     }
 }
