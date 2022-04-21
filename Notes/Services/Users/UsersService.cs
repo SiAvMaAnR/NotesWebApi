@@ -1,5 +1,6 @@
 ﻿using Notes.Domain.Models;
 using Notes.DTOs.Notes.AddNote;
+using Notes.DTOs.Users.GetUser;
 using Notes.DTOs.Users.GetUsersList;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Infrastucture.Interfaces;
@@ -17,7 +18,17 @@ namespace Notes.Services.Users
 
         public async Task<GetUsersListResponse> GetUsersListAsync(AddNoteRequest request)
         {
-            
+            return new GetUsersListResponse();
+        }
+
+        public Task<GetUsersListResponse> GetUsersListAsync(GetUsersListRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<GetUserResponse> GetUsersListAsync(GetUserRequest request)
+        {
+            throw new NotImplementedException();
         }
     }
 }

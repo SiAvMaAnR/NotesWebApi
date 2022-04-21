@@ -10,8 +10,8 @@ using Notes.DTOs;
 using Notes.DTOs.Notes.AddNote;
 using Notes.DTOs.Notes.Controller;
 using Notes.DTOs.Notes.DeleteNote;
-using Notes.DTOs.Notes.GetListNote;
 using Notes.DTOs.Notes.GetNote;
+using Notes.DTOs.Notes.GetNotesList;
 using Notes.DTOs.Notes.UpdateNote;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Infrastucture.Interfaces;
@@ -50,7 +50,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                         text = "User not found!"
                     });
 
-                var result = await service.GetListNoteAsync(new GetListNoteRequest(pageNumber, pageSize, sort));
+                var result = await service.GetNotesListAsync(new GetNotesListRequest(pageNumber, pageSize, sort));
 
                 if (result.Notes == null)
                     return NotFound(new
