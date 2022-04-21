@@ -174,7 +174,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
         }
 
 
-        [HttpDelete("{id:int}"), Authorize(Roles = "Admin,User")]
+        [HttpDelete, Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Delete([FromBody] int id)
         {
             try

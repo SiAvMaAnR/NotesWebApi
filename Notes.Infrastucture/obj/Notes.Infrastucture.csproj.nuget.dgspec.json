@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\source\\repos\\Notes\\Notes.Infrastucture\\Notes.Infrastucture.csproj": {}
+    "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Infrastucture\\Notes.Infrastucture.csproj": {}
   },
   "projects": {
-    "D:\\source\\repos\\Notes\\Notes.Domain\\Notes.Domain.csproj": {
+    "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Domain\\Notes.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\source\\repos\\Notes\\Notes.Domain\\Notes.Domain.csproj",
+        "projectUniqueName": "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Domain\\Notes.Domain.csproj",
         "projectName": "Notes.Domain",
-        "projectPath": "D:\\source\\repos\\Notes\\Notes.Domain\\Notes.Domain.csproj",
+        "projectPath": "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Domain\\Notes.Domain.csproj",
         "packagesPath": "C:\\Users\\dunduk\\.nuget\\packages\\",
-        "outputPath": "D:\\source\\repos\\Notes\\Notes.Domain\\obj\\",
+        "outputPath": "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\programs\\visual studio\\NuGetPackages",
@@ -63,14 +63,14 @@
         }
       }
     },
-    "D:\\source\\repos\\Notes\\Notes.Infrastucture\\Notes.Infrastucture.csproj": {
+    "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Infrastucture\\Notes.Infrastucture.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\source\\repos\\Notes\\Notes.Infrastucture\\Notes.Infrastucture.csproj",
+        "projectUniqueName": "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Infrastucture\\Notes.Infrastucture.csproj",
         "projectName": "Notes.Infrastucture",
-        "projectPath": "D:\\source\\repos\\Notes\\Notes.Infrastucture\\Notes.Infrastucture.csproj",
+        "projectPath": "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Infrastucture\\Notes.Infrastucture.csproj",
         "packagesPath": "C:\\Users\\dunduk\\.nuget\\packages\\",
-        "outputPath": "D:\\source\\repos\\Notes\\Notes.Infrastucture\\obj\\",
+        "outputPath": "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Infrastucture\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\programs\\visual studio\\NuGetPackages",
@@ -92,8 +92,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\source\\repos\\Notes\\Notes.Domain\\Notes.Domain.csproj": {
-                "projectPath": "D:\\source\\repos\\Notes\\Notes.Domain\\Notes.Domain.csproj"
+              "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Domain\\Notes.Domain.csproj": {
+                "projectPath": "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Domain\\Notes.Domain.csproj"
               }
             }
           }

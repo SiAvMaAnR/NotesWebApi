@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "l1q5W/qYLljaPubzJpeaTCxEwXLde5UR/emeBA8qQ4UtOyA3fXBKBhO279eUpvu/IdIiK6jzIXfb+UPOG3VIgA==",
+  "dgSpecHash": "PLhixx3+dcCAcejvqIgq0g/L+rV3dG3RVg4AQSQ+PT1UE2Y7CJhA0kEK+dMIvpIbK9etviCs6qs8QBnN66pddw==",
   "success": true,
-  "projectFilePath": "D:\\source\\repos\\Notes\\Notes\\Notes.csproj",
+  "projectFilePath": "D:\\source\\repos\\Notes\\NotesWebApi\\Notes\\Notes.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\dunduk\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.4\\microsoft.aspnetcore.authentication.jwtbearer.6.0.4.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
