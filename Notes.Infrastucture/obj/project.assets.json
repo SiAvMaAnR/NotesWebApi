@@ -860,11 +860,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\source\\repos\\Notes\\Notes.Infrastucture\\Notes.Infrastucture.csproj",
+      "projectUniqueName": "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Infrastucture\\Notes.Infrastucture.csproj",
       "projectName": "Notes.Infrastucture",
-      "projectPath": "D:\\source\\repos\\Notes\\Notes.Infrastucture\\Notes.Infrastucture.csproj",
+      "projectPath": "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Infrastucture\\Notes.Infrastucture.csproj",
       "packagesPath": "C:\\Users\\dunduk\\.nuget\\packages\\",
-      "outputPath": "D:\\source\\repos\\Notes\\Notes.Infrastucture\\obj\\",
+      "outputPath": "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Infrastucture\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\programs\\visual studio\\NuGetPackages",
@@ -886,8 +886,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\source\\repos\\Notes\\Notes.Domain\\Notes.Domain.csproj": {
-              "projectPath": "D:\\source\\repos\\Notes\\Notes.Domain\\Notes.Domain.csproj"
+            "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Domain\\Notes.Domain.csproj": {
+              "projectPath": "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Domain\\Notes.Domain.csproj"
             }
           }
         }
@@ -934,7 +934,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Ao+JB4OX18Zyg4fVJ2sr4WMzIcTd8JeXENMkzhlwOWi6E31Oz+wo9YRD650AOeOp/KM1YkwCYegXBtxRN5QmZA==",
+  "dgSpecHash": "EC+/DRFYIbaLlJk7hYnJLxlvasiMud2C7NywaznOO+I3kFXcWA+INvK9bMuSv9oQo0xaUXLpIuYg2VMKn7NDOw==",
   "success": true,
-  "projectFilePath": "D:\\source\\repos\\Notes\\Notes.Infrastucture\\Notes.Infrastucture.csproj",
+  "projectFilePath": "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Infrastucture\\Notes.Infrastucture.csproj",
   "expectedPackageFiles": [
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\dunduk\\.nuget\\packages\\microsoft.entityframeworkcore\\6.0.3\\microsoft.entityframeworkcore.6.0.3.nupkg.sha512",

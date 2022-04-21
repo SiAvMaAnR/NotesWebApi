@@ -15,11 +15,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\source\\repos\\Notes\\Notes.Domain\\Notes.Domain.csproj",
+      "projectUniqueName": "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Domain\\Notes.Domain.csproj",
       "projectName": "Notes.Domain",
-      "projectPath": "D:\\source\\repos\\Notes\\Notes.Domain\\Notes.Domain.csproj",
+      "projectPath": "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Domain\\Notes.Domain.csproj",
       "packagesPath": "C:\\Users\\dunduk\\.nuget\\packages\\",
-      "outputPath": "D:\\source\\repos\\Notes\\Notes.Domain\\obj\\",
+      "outputPath": "D:\\source\\repos\\Notes\\NotesWebApi\\Notes.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\programs\\visual studio\\NuGetPackages",
@@ -67,7 +67,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
       }
     }
   }
