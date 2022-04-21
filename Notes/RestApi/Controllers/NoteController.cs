@@ -50,7 +50,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                         text = "User not found!"
                     });
 
-                var result = await service.GetListNoteAsync(new GetListNoteRequest(pageNumber, pageSize, sort, User));
+                var result = await service.GetListNoteAsync(new GetListNoteRequest(pageNumber, pageSize, sort));
 
                 if (result.Notes == null)
                     return NotFound(new
@@ -89,7 +89,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
         {
             try
             {
-                var result = await service.GetNoteAsync(new GetNoteRequest(id, User));
+                var result = await service.GetNoteAsync(new GetNoteRequest(id));
 
                 if (User == null)
                     return NotFound(new
@@ -143,7 +143,6 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     Title = noteDto.Title,
                     Description = noteDto.Description,
                     IsDone = noteDto.IsDone,
-                    User = User
                 });
 
                 if (result.Note == null)
@@ -180,7 +179,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
         {
             try
             {
-                var result = await service.DeleteNoteAsync(new DeleteNoteRequest(User, id));
+                var result = await service.DeleteNoteAsync(new DeleteNoteRequest(id));
 
                 if (User == null)
                     return NotFound(new
@@ -238,7 +237,6 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     Title = noteDto.Title,
                     Description = noteDto.Description,
                     IsDone = noteDto.IsDone,
-                    User = User
                 });
 
                 if (!result.IsUpdate)

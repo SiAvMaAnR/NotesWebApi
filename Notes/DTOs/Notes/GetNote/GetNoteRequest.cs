@@ -4,15 +4,13 @@ namespace Notes.DTOs.Notes.GetNote
 {
     public class GetNoteRequest
     {
-        public GetNoteRequest(int id, ClaimsPrincipal claimsPrincipal)
+        public GetNoteRequest(int id)
         {
             Id = id;
-            User = claimsPrincipal;
         }
 
         public GetNoteRequest() { }
 
         public int Id { get; set; }
-        public ClaimsPrincipal User { get; set; }
     }
 }

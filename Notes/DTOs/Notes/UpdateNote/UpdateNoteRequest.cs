@@ -5,13 +5,12 @@ namespace Notes.DTOs.Notes.UpdateNote
 {
     public class UpdateNoteRequest
     {
-        public UpdateNoteRequest(int id,string title, string description, bool isDone, ClaimsPrincipal user)
+        public UpdateNoteRequest(int id,string title, string description, bool isDone)
         {
             Id = id;
             Title = title;
             Description = description;
             IsDone = isDone;
-            User = user;
         }
         public UpdateNoteRequest() { }
 
@@ -27,7 +26,5 @@ namespace Notes.DTOs.Notes.UpdateNote
 
         [Required]
         public bool IsDone { get; set; }
-
-        public ClaimsPrincipal User { get; set; }
     }
 }

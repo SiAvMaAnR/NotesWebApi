@@ -48,6 +48,5 @@ namespace Notes.Infrastructure.Repositories
         {
             return await dbSet.FirstOrDefaultAsync(predicate);
         }
-
     }
 }

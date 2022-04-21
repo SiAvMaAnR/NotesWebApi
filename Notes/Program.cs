@@ -34,7 +34,6 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IAsyncRepository<Note>, NotesRepository>();
 builder.Services.AddScoped<INoteService, NotesService>();
-
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Notes.Domain.Enums;
 using Notes.Domain.Models;
 using Notes.DTOs.Notes.AddNote;
@@ -18,14 +19,17 @@ namespace Notes.Services
 {
     public class NotesService : BaseService, INoteService
     {
-        public NotesService(IAsyncRepository<Note> repository, EFContext context)
+        private readonly User? user;
+
+        public NotesService(IAsyncRepository<Note> repository, EFContext context, IHttpContextAccessor httpContext)
             : base(repository, context)
         {
+            this.user = CurrentUser.GetUser(context, httpContext.HttpContext!.User);
         }
 
         public async Task<AddNoteResponse> AddNoteAsync(AddNoteRequest request)
         {
-            User? user = await CurrentUser.GetUserAsync(context, request.User);
+            //User? user = await CurrentUser.GetUserAsync(context, request.User);
 
             if (user != null)
             {
@@ -56,7 +60,7 @@ namespace Notes.Services
 
         public async Task<DeleteNoteResponse> DeleteNoteAsync(DeleteNoteRequest request)
         {
-            User? user = await CurrentUser.GetUserAsync(context, request.User);
+            //User? user = await CurrentUser.GetUserAsync(context, request.User);
 
             Note? note = await repository.GetAsync(note => note.Id == request.Id && user!.Id == note.UserId);
 
@@ -71,7 +75,7 @@ namespace Notes.Services
 
         public async Task<GetListNoteResponse> GetListNoteAsync(GetListNoteRequest request)
         {
-            User? user = await CurrentUser.GetUserAsync(context, request.User);
+            //User? user = await CurrentUser.GetUserAsync(context, request.User);
 
             IEnumerable<Note>? notes = await repository.GetAllAsync(note => user!.Id == note.UserId);
 
@@ -116,7 +120,7 @@ namespace Notes.Services
 
         public async Task<GetNoteResponse> GetNoteAsync(GetNoteRequest request)
         {
-            User? user = await CurrentUser.GetUserAsync(context, request.User);
+            //User? user = await CurrentUser.GetUserAsync(context, request.User);
 
             Note? note = await repository.GetAsync(note => note.Id == request.Id && user!.Id == note.UserId);
 
@@ -128,7 +132,7 @@ namespace Notes.Services
 
         public async Task<UpdateNoteResponse> UpdateNoteAsync(UpdateNoteRequest request)
         {
-            User? user = await CurrentUser.GetUserAsync(context, request.User);
+            //User? user = await CurrentUser.GetUserAsync(context, request.User);
 
             Note? note = await repository.GetAsync(note => note.Id == request.Id && user!.Id == note.UserId);
 

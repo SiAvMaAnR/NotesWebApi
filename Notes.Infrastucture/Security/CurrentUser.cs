@@ -17,6 +17,11 @@ namespace Notes.Infrastucture.Security
             return await Task.Run(() => claimsPrincipal?.FindFirst(ClaimTypes.Email)?.Value ?? "");
         }
 
+        public static string GetEmail(ClaimsPrincipal claimsPrincipal)
+        {
+            return claimsPrincipal?.FindFirst(ClaimTypes.Email)?.Value ?? "";
+        }
+
         public static async Task<User?> GetUserAsync(EFContext context, string email)
         {
             return await  context.Users.FirstOrDefaultAsync(u => u.Email == email);
@@ -26,6 +31,12 @@ namespace Notes.Infrastucture.Security
         {
             string email = await GetEmailAsync(claimsPrincipal);
             return await context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        public static User? GetUser(EFContext context, ClaimsPrincipal claimsPrincipal)
+        {
+            string email = GetEmail(claimsPrincipal);
+            return context.Users.FirstOrDefault(u => u.Email == email);
         }
     }
 }
