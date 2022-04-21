@@ -2,18 +2,18 @@
 using System.Linq.Expressions;
 using System.Security.Claims;
 
-namespace Notes.DTOs.Notes.GetListNote
+namespace Notes.DTOs.Notes.GetNotesList
 {
-    public class GetListNoteRequest
+    public class GetNotesListRequest
     {
-        public GetListNoteRequest(int pageNumber, int pageSize, string sort)
+        public GetNotesListRequest(int pageNumber, int pageSize, string sort)
         {
             PageNumber = pageNumber;
             PageSize = pageSize;
             Sort = sort;
         }
 
-        public GetListNoteRequest() { }
+        public GetNotesListRequest() { }
 
         public int PageNumber { get; set; }
         public int PageSize { get; set; }

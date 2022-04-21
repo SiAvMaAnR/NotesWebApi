@@ -4,8 +4,8 @@ using Notes.Domain.Enums;
 using Notes.Domain.Models;
 using Notes.DTOs.Notes.AddNote;
 using Notes.DTOs.Notes.DeleteNote;
-using Notes.DTOs.Notes.GetListNote;
 using Notes.DTOs.Notes.GetNote;
+using Notes.DTOs.Notes.GetNotesList;
 using Notes.DTOs.Notes.UpdateNote;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Infrastructure.Security;
@@ -69,7 +69,7 @@ namespace Notes.Services
             return new DeleteNoteResponse(false);
         }
 
-        public async Task<GetListNoteResponse> GetListNoteAsync(GetListNoteRequest request)
+        public async Task<GetNotesListResponse> GetNotesListAsync(GetNotesListRequest request)
         {
             IEnumerable<Note>? notes = await repository.GetAllAsync(note => user!.Id == note.UserId);
 
@@ -93,7 +93,7 @@ namespace Notes.Services
 
                 var tatalPages = (int)Math.Ceiling(((decimal)totalNotes / request.PageSize));
 
-                return new GetListNoteResponse()
+                return new GetNotesListResponse()
                 {
                     Notes = result,
                     PageSize = request.PageSize,
@@ -104,7 +104,7 @@ namespace Notes.Services
             }
             else
             {
-                return new GetListNoteResponse()
+                return new GetNotesListResponse()
                 {
                     Notes = null,
                 };
