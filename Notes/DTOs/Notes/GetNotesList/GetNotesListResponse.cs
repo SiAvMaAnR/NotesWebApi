@@ -5,6 +5,17 @@ namespace Notes.DTOs.Notes.GetNotesList
 {
     public class GetNotesListResponse
     {
+        public GetNotesListResponse(IEnumerable<Note>? notes, int pageNumber, int pageSize, int totalNotes, int totalPages)
+        {
+            Notes = notes;
+            PageNumber = pageNumber;
+            PageSize = pageSize;
+            TotalNotes = totalNotes;
+            TotalPages = totalPages;
+        }
+
+        public GetNotesListResponse() { }
+
         public IEnumerable<Note>? Notes { get; set; }
         public int PageNumber { get; set; }
         public int PageSize { get; set; }

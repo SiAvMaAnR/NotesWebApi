@@ -24,8 +24,9 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             this.configuration = configuration;
         }
 
+
         [HttpGet("/my"), Authorize(Roles = "User,Admin")]
-        public IActionResult Get()
+        public IActionResult GetAccount()
         {
             try
             {
@@ -56,7 +57,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
 
         [HttpPost("/register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDto register)
+        public async Task<IActionResult> PostRegister([FromBody] RegisterDto register)
         {
             try
             {
@@ -113,7 +114,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
 
         [HttpPost("/login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto login)
+        public async Task<IActionResult> PostLogin([FromBody] LoginDto login)
         {
             try
             {
@@ -142,7 +143,6 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                         status = TStatusCodes.Bad_Request
                     });
 
-                context.Entry(user).Reference(x => x.Person).Load();
 
                 return Ok(new
                 {

@@ -17,12 +17,12 @@ namespace Notes.Domain.Models
 
         [JsonIgnore]
         public byte[] PasswordHash { get; set; }
-
         [JsonIgnore]
         public byte[] PasswordSalt { get; set; }
 
         public string Role { get; set; }
 
+        [JsonIgnore]
         public Person Person { get; set; }
 
         public int PersonId { get; set; }

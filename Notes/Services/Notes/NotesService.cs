@@ -17,7 +17,7 @@ using System.Security.Claims;
 
 namespace Notes.Services
 {
-    public class NotesService : BaseService, INoteService
+    public class NotesService : BaseService<Note>, INoteService
     {
         private readonly User? user;
 
@@ -47,20 +47,18 @@ namespace Notes.Services
                     Note = note,
                 };
             }
-            else
+
+            return new AddNoteResponse()
             {
-                return new AddNoteResponse()
-                {
-                    Note = null,
-                };
-            }
+                Note = null,
+            };
         }
 
         public async Task<DeleteNoteResponse> DeleteNoteAsync(DeleteNoteRequest request)
         {
             Note? note = await repository.GetAsync(note => note.Id == request.Id && user!.Id == note.UserId);
 
-            if(note != null)
+            if (note != null)
             {
                 await repository.DeleteAsync(note);
                 return new DeleteNoteResponse(true);
@@ -102,20 +100,17 @@ namespace Notes.Services
                     TotalPages = tatalPages,
                 };
             }
-            else
-            {
-                return new GetNotesListResponse()
-                {
-                    Notes = null,
-                };
-            }
 
+            return new GetNotesListResponse()
+            {
+                Notes = null,
+            };
         }
 
         public async Task<GetNoteResponse> GetNoteAsync(GetNoteRequest request)
         {
             Note? note = await repository.GetAsync(note => note.Id == request.Id && user!.Id == note.UserId);
-
+           
             return new GetNoteResponse()
             {
                 Note = note
@@ -126,7 +121,7 @@ namespace Notes.Services
         {
             Note? note = await repository.GetAsync(note => note.Id == request.Id && user!.Id == note.UserId);
 
-            if(note != null)
+            if (note != null)
             {
                 note.Title = request.Title;
                 note.Description = request.Description;
@@ -136,6 +131,7 @@ namespace Notes.Services
 
                 return new UpdateNoteResponse(true);
             }
+
             return new UpdateNoteResponse(false);
         }
     }

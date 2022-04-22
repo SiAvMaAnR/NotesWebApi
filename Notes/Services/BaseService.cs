@@ -11,12 +11,12 @@ using System.Security.Claims;
 
 namespace Notes.Services
 {
-    public class BaseService
+    public class BaseService<TEntity> where TEntity : class
     {
-        protected readonly IAsyncRepository<Note> repository;
+        protected readonly IAsyncRepository<TEntity> repository;
         protected readonly EFContext context;
 
-        public BaseService(IAsyncRepository<Note> repository, EFContext context)
+        public BaseService(IAsyncRepository<TEntity> repository, EFContext context)
         {
             this.repository = repository;
             this.context = context;

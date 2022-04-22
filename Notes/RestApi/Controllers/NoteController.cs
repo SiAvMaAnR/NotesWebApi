@@ -39,7 +39,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
 
         [HttpGet, Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Get(int pageNumber, int pageSize, string sort = "asc_date")
+        public async Task<IActionResult> GetNote(int pageNumber, int pageSize, string sort = "asc_date")
         {
             try
             {
@@ -85,7 +85,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
 
         [HttpGet("{id:int}"), Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetNotes(int id)
         {
             try
             {
@@ -127,7 +127,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
 
         [HttpPost, Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Post([FromBody] AddNoteDto noteDto)
+        public async Task<IActionResult> PostNote([FromBody] AddNoteDto noteDto)
         {
             try
             {
@@ -175,7 +175,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
 
         [HttpDelete, Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Delete([FromBody] int id)
+        public async Task<IActionResult> DeleteNote([FromBody] int id)
         {
             try
             {
@@ -213,7 +213,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
 
         [HttpPut, Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Put([FromBody] UpdateNoteDto noteDto)
+        public async Task<IActionResult> PutNote([FromBody] UpdateNoteDto noteDto)
         {
             try
             {
@@ -239,7 +239,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     IsDone = noteDto.IsDone,
                 });
 
-                if (!result.IsUpdate)
+                if (!result.IsSuccess)
                     return NotFound(new
                     {
                         status = TStatusCodes.Not_Found,

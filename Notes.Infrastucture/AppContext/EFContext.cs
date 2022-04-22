@@ -17,7 +17,6 @@ namespace Notes.Infrastructure.ApplicationContext
 
         public EFContext(DbContextOptions<EFContext> options) : base(options)
         {
-            //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 

@@ -2,12 +2,12 @@
 {
     public class UpdateNoteResponse
     {
-        public UpdateNoteResponse(bool isUpdate)
+        public UpdateNoteResponse(bool isSuccess)
         {
-            IsUpdate = isUpdate;
+            IsSuccess = isSuccess;
         }
         public UpdateNoteResponse() { }
 
-        public bool IsUpdate { get; set; }
+        public bool IsSuccess { get; set; }
     }
 }
