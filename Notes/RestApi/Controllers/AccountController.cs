@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Notes.Domain.Enums;
 using Notes.Domain.Models;
-using Notes.DTOs.Auth;
+using Notes.DTOs.Controller.Account;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Infrastructure.Security;
 using Notes.Interfaces;

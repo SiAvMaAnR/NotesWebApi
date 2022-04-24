@@ -1,14 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Notes.Domain.Enums;
-using Notes.Domain.Models;
-using Notes.DTOs.Users.Controller;
-using Notes.DTOs.Users.DeleteUser;
-using Notes.DTOs.Users.GetUser;
-using Notes.DTOs.Users.GetUsersList;
-using Notes.DTOs.Users.SetRoleUser;
+using Notes.DTOs.Controller.Users;
+using Notes.DTOs.Service.Users.DeleteUser;
+using Notes.DTOs.Service.Users.GetUser;
+using Notes.DTOs.Service.Users.GetUsersList;
+using Notes.DTOs.Service.Users.SetRoleUser;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Interfaces;
 
