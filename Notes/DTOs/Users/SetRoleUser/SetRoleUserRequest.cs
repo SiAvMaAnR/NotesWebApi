@@ -6,6 +6,6 @@ namespace Notes.DTOs.Users.SetRoleUser
     {
         public int Id { get; set; }
 
-        public Roles Role { get; set; }
+        public Role Role { get; set; }
     }
 }

@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Notes.Domain.Enums
 {
-    public enum Roles
+    public enum Role
     {
+        Banned,
         Admin,
         User,
     }

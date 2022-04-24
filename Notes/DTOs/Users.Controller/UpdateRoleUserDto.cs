@@ -8,7 +8,8 @@ namespace Notes.DTOs.Users.Controller
         [Required]
         public int Id { get; set; }
 
-        [EnumDataType(typeof(Roles))]
-        public Roles Role { get; set; }
+        [Required]
+        [EnumDataType(typeof(Role))]
+        public Role Role { get; set; }
     }
 }

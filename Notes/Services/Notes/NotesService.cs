@@ -19,12 +19,9 @@ namespace Notes.Services
 {
     public class NotesService : BaseService<Note>, INoteService
     {
-        private readonly User? user;
-
         public NotesService(IAsyncRepository<Note> repository, EFContext context, IHttpContextAccessor httpContext)
-            : base(repository, context)
+            : base(repository, context, httpContext)
         {
-            this.user = CurrentUser.GetUser(context, httpContext.HttpContext!.User);
         }
 
         public async Task<AddNoteResponse> AddNoteAsync(AddNoteRequest request)
@@ -56,7 +53,9 @@ namespace Notes.Services
 
         public async Task<DeleteNoteResponse> DeleteNoteAsync(DeleteNoteRequest request)
         {
-            Note? note = await repository.GetAsync(note => note.Id == request.Id && user!.Id == note.UserId);
+            Note? note = await repository.GetAsync(note =>
+                note.Id == request.Id &&
+                user!.Id == note.UserId);
 
             if (note != null)
             {
@@ -69,7 +68,8 @@ namespace Notes.Services
 
         public async Task<GetNotesListResponse> GetNotesListAsync(GetNotesListRequest request)
         {
-            IEnumerable<Note>? notes = await repository.GetAllAsync(note => user!.Id == note.UserId);
+            IEnumerable<Note>? notes = await repository
+                .GetAllAsync(note => user!.Id == note.UserId, note => note.User);
 
             if (notes != null)
             {
@@ -79,6 +79,9 @@ namespace Notes.Services
                         notes = notes?.OrderBy(note => note.CreateDate);
                         break;
                     case "desc_date":
+                        notes = notes?.OrderByDescending(note => note.CreateDate);
+                        break;
+                    default:
                         notes = notes?.OrderByDescending(note => note.CreateDate);
                         break;
                 };
@@ -109,8 +112,10 @@ namespace Notes.Services
 
         public async Task<GetNoteResponse> GetNoteAsync(GetNoteRequest request)
         {
-            Note? note = await repository.GetAsync(note => note.Id == request.Id && user!.Id == note.UserId);
-           
+            Note? note = await repository.GetAsync(
+                note => note.Id == request.Id && user!.Id == note.UserId,
+                note => note.User);
+
             return new GetNoteResponse()
             {
                 Note = note

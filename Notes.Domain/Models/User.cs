@@ -22,7 +22,6 @@ namespace Notes.Domain.Models
 
         public string Role { get; set; }
 
-        [JsonIgnore]
         public Person Person { get; set; }
 
         public int PersonId { get; set; }

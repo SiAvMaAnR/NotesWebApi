@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Notes.Domain.Enums
 {
-    public enum TStatusCodes
+    public enum TStatusCode
     {
         /// <summary>
         /// Успешная обработка запроса
@@ -19,7 +19,7 @@ namespace Notes.Domain.Enums
         /// <summary>
         /// Запрос прошел успешно, без контента
         /// </summary>
-        No_Content = 204,
+        NoContent = 204,
         /// <summary>
         /// URL страницы изменен
         /// </summary>
@@ -31,11 +31,11 @@ namespace Notes.Domain.Enums
         /// <summary>
         /// На запрашиваемой странице не было обновлений с момента последнего ее посещения
         /// </summary>
-        Not_Modified = 304,
+        NotModified = 304,
         /// <summary>
         /// Возникла проблема на стороне пользователя
         /// </summary>
-        Bad_Request = 400,
+        BadRequest = 400,
         /// <summary>
         /// Возникла проблема с аутентификацией или авторизацией
         /// </summary>
@@ -47,22 +47,22 @@ namespace Notes.Domain.Enums
         /// <summary>
         /// Заданная страница (ресурс) больше не существует
         /// </summary>
-        Not_Found = 404,
+        NotFound = 404,
         /// <summary>
         /// Произошла ошибка на стороне сервера
         /// </summary>
-        Internet_Server_Error = 500,
+        InternetServerError = 500,
         /// <summary>
         /// Прокси сервер не может получить ответ от сайта
         /// </summary>
-        Bad_Gateway = 502,
+        BadGateway = 502,
         /// <summary>
         /// Сервис запроса оказался перегружен и в данный момент не доступен
         /// </summary>
-        Service_Unavailable = 503,
+        ServiceUnavailable = 503,
         /// <summary>
         /// Слишком долгий ответ
         /// </summary>
-        Gateway_Timeout = 504
+        GatewayTimeout = 504
     }
 }

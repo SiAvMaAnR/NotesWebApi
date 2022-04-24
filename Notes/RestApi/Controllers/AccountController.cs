@@ -6,6 +6,7 @@ using Notes.Domain.Models;
 using Notes.DTOs.Auth;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Infrastructure.Security;
+using Notes.Interfaces;
 using System.Security.Claims;
 
 namespace Notes.Api.Presentation.RestApi.Controllers
@@ -15,49 +16,56 @@ namespace Notes.Api.Presentation.RestApi.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        private readonly IUserService service;
         private readonly EFContext context;
+        private readonly ILogger logger;
         private readonly IConfiguration configuration;
 
-        public AccountController(EFContext context, IConfiguration configuration)
+        public AccountController(IUserService service, EFContext context, ILogger<AccountController> logger, IConfiguration configuration)
         {
+            this.service = service;
             this.context = context;
+            this.logger = logger;
             this.configuration = configuration;
         }
 
-
-        [HttpGet("/my"), Authorize(Roles = "User,Admin")]
-        public IActionResult GetAccount()
+        [HttpGet("Info"), Authorize]
+        public IActionResult Get()
         {
             try
             {
+                var user = service.User;
+
+                if (user == null)
+                    return NotFound(new
+                    {
+                        status = TStatusCode.NotFound,
+                        text = "User not found!"
+                    });
+
                 return Ok(new
                 {
                     data = new
                     {
-                        userNameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "NONE",
-                        userName = User.FindFirstValue(ClaimTypes.Name) ?? "NONE",
-                        userRole = User.FindFirstValue(ClaimTypes.Role) ?? "NONE",
-                        userEmail = User.FindFirstValue(ClaimTypes.Email) ?? "NONE"
+                        user = user,
                     },
-                    title = "Success!",
-                    status = TStatusCodes.OK
+                    status = TStatusCode.OK,
+                    text = "Success!"
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    title = "User not found!",
-                    status = TStatusCodes.Bad_Request
+                    status = TStatusCode.BadRequest,
+                    text = "Failed to get user!"
                 });
             }
-            
-
         }
 
 
-        [HttpPost("/register")]
-        public async Task<IActionResult> PostRegister([FromBody] RegisterDto register)
+        [HttpPost("Register")]
+        public async Task<IActionResult> Post([FromBody] RegisterDto register)
         {
             try
             {
@@ -68,7 +76,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     return BadRequest(new
                     {
                         title = "This user already exists!",
-                        status = TStatusCodes.Bad_Request
+                        status = TStatusCode.BadRequest
                     });
 
                 if (AuthOptions.CreatePasswordHash(register.Password, out byte[]? passwordHash, out byte[]? passwordSalt))
@@ -78,7 +86,8 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                         Email = register.Email,
                         PasswordHash = passwordHash!,
                         PasswordSalt = passwordSalt!,
-                        Role = Roles.User.ToString(),
+                        Role = Role.User.ToString(),
+
                         Person = new Person()
                         {
                             Name = register.Name,
@@ -91,14 +100,14 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     return Ok(new
                     {
                         title = "Success!",
-                        status = TStatusCodes.OK
+                        status = TStatusCode.OK
                     });
                 }
 
                 return BadRequest(new
                 {
                     title = "Failed to create an account!",
-                    status = TStatusCodes.Bad_Request
+                    status = TStatusCode.BadRequest
                 });
             }
             catch (Exception)
@@ -106,15 +115,15 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 return BadRequest(new
                 {
                     title = "Failed to create an account!",
-                    status = TStatusCodes.Bad_Request
+                    status = TStatusCode.BadRequest
                 });
             }
 
         }
 
 
-        [HttpPost("/login")]
-        public async Task<IActionResult> PostLogin([FromBody] LoginDto login)
+        [HttpPost("Login")]
+        public async Task<IActionResult> Post([FromBody] LoginDto login)
         {
             try
             {
@@ -124,14 +133,14 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     return NotFound(new
                     {
                         title = "User is not found!",
-                        status = TStatusCodes.Not_Found
+                        status = TStatusCode.NotFound
                     });
 
                 if (!AuthOptions.VerifyPasswordHash(login.Password, user.PasswordHash, user.PasswordSalt))
                     return BadRequest(new
                     {
                         title = "Incorrect password!",
-                        status = TStatusCodes.Bad_Request
+                        status = TStatusCode.BadRequest
                     });
 
                 string secretKey = configuration.GetSection("Authorization:SecretKey").Value;
@@ -140,7 +149,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     return BadRequest(new
                     {
                         title = "Failed to create token!",
-                        status = TStatusCodes.Bad_Request
+                        status = TStatusCode.BadRequest
                     });
 
 
@@ -153,7 +162,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     },
 
                     title = "Success!",
-                    status = TStatusCodes.OK,
+                    status = TStatusCode.OK,
                 });
             }
             catch (Exception)
@@ -161,7 +170,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 return BadRequest(new
                 {
                     title = "Failed to create token!",
-                    status = TStatusCodes.Bad_Request
+                    status = TStatusCode.BadRequest
                 });
             }
 

@@ -21,7 +21,6 @@ namespace Notes.Domain.Models
 
         public int UserId { get; set; }
 
-        [JsonIgnore]
         public User User { get; set; }
     }
 }

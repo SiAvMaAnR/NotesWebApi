@@ -37,25 +37,29 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             this.configuration = configuration;
         }
 
-
         [HttpGet, Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> GetNote(int pageNumber, int pageSize, string sort = "asc_date")
+        public async Task<IActionResult> Get([FromQuery]GetNoteDto getNoteDto)
         {
             try
             {
                 if (User == null)
                     return NotFound(new
                     {
-                        status = TStatusCodes.Not_Found,
+                        status = TStatusCode.NotFound,
                         text = "User not found!"
                     });
 
-                var result = await service.GetNotesListAsync(new GetNotesListRequest(pageNumber, pageSize, sort));
+                var result = await service.GetNotesListAsync(new GetNotesListRequest()
+                {
+                    PageNumber = getNoteDto.PageNumber,
+                    PageSize = getNoteDto.PageSize,
+                    Sort = getNoteDto.Sort
+                });
 
                 if (result.Notes == null)
                     return NotFound(new
                     {
-                        status = TStatusCodes.Not_Found,
+                        status = TStatusCode.NotFound,
                         text = "Notes not found!"
                     });
 
@@ -69,7 +73,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                         totalNotes = result.TotalNotes,
                         totalPages = result.TotalPages
                     },
-                    status = TStatusCodes.OK,
+                    status = TStatusCode.OK,
                     text = "Success!"
                 });
             }
@@ -77,15 +81,14 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             {
                 return BadRequest(new
                 {
-                    status = TStatusCodes.Bad_Request,
+                    status = TStatusCode.BadRequest,
                     text = "Failed to get notes!"
                 });
             }
         }
 
-
         [HttpGet("{id:int}"), Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> GetNotes(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
@@ -94,14 +97,14 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 if (User == null)
                     return NotFound(new
                     {
-                        status = TStatusCodes.Not_Found,
+                        status = TStatusCode.NotFound,
                         text = "User not found!"
                     });
 
                 if (result.Note == null)
                     return NotFound(new
                     {
-                        status = TStatusCodes.Not_Found,
+                        status = TStatusCode.NotFound,
                         text = "Note not found!"
                     });
 
@@ -111,7 +114,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     {
                         note = result.Note
                     },
-                    status = TStatusCodes.OK,
+                    status = TStatusCode.OK,
                     text = "Success!"
                 });
             }
@@ -119,22 +122,21 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             {
                 return BadRequest(new
                 {
-                    status = TStatusCodes.Bad_Request,
+                    status = TStatusCode.BadRequest,
                     text = "Failed to get notes!"
                 });
             }
         }
 
-
         [HttpPost, Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> PostNote([FromBody] AddNoteDto noteDto)
+        public async Task<IActionResult> Post([FromBody] AddNoteDto noteDto)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest(new
                     {
-                        status = TStatusCodes.Bad_Request,
+                        status = TStatusCode.BadRequest,
                         text = "Incorrect data!"
                     });
 
@@ -148,7 +150,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 if (result.Note == null)
                     return NotFound(new
                     {
-                        status = TStatusCodes.Not_Found,
+                        status = TStatusCode.NotFound,
                         text = "Note not found!"
                     });
 
@@ -159,7 +161,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     {
                         note = result.Note
                     },
-                    status = TStatusCodes.OK,
+                    status = TStatusCode.OK,
                     text = "Success!",
                 });
             }
@@ -167,15 +169,14 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             {
                 return BadRequest(new
                 {
-                    status = TStatusCodes.Bad_Request,
+                    status = TStatusCode.BadRequest,
                     text = "Unable to recognize note!"
                 });
             }
         }
 
-
         [HttpDelete, Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> DeleteNote([FromBody] int id)
+        public async Task<IActionResult> Delete([FromBody] int id)
         {
             try
             {
@@ -184,20 +185,20 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 if (User == null)
                     return NotFound(new
                     {
-                        status = TStatusCodes.Not_Found,
+                        status = TStatusCode.NotFound,
                         text = "User not found!"
                     });
 
                 if (!result.IsDeleted)
                     return BadRequest(new
                     {
-                        status = TStatusCodes.Bad_Request,
+                        status = TStatusCode.BadRequest,
                         text = "Failed to delete note!"
                     });
 
                 return Ok(new
                 {
-                    status = TStatusCodes.OK,
+                    status = TStatusCode.OK,
                     text = "Success!"
                 });
             }
@@ -205,29 +206,28 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             {
                 return BadRequest(new
                 {
-                    status = TStatusCodes.Bad_Request,
+                    status = TStatusCode.BadRequest,
                     text = "Failed to delete note!"
                 });
             }
         }
 
-
         [HttpPut, Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> PutNote([FromBody] UpdateNoteDto noteDto)
+        public async Task<IActionResult> Put([FromBody] UpdateNoteDto noteDto)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest(new
                     {
-                        status = TStatusCodes.Bad_Request,
+                        status = TStatusCode.BadRequest,
                         text = "Incorrect data!"
                     });
 
                 if (User == null)
                     return NotFound(new
                     {
-                        status = TStatusCodes.Not_Found,
+                        status = TStatusCode.NotFound,
                         text = "User not found!"
                     });
 
@@ -242,13 +242,13 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 if (!result.IsSuccess)
                     return NotFound(new
                     {
-                        status = TStatusCodes.Not_Found,
+                        status = TStatusCode.NotFound,
                         text = "Note not found!",
                     });
 
                 return Ok(new
                 {
-                    status = TStatusCodes.OK,
+                    status = TStatusCode.OK,
                     text = "Success!",
                 });
             }
@@ -256,7 +256,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             {
                 return BadRequest(new
                 {
-                    status = TStatusCodes.Bad_Request,
+                    status = TStatusCode.BadRequest,
                     text = "Failed to update note!"
                 });
             }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Notes.Domain.Models;
 using Notes.DTOs.Notes.AddNote;
+using Notes.DTOs.Users.DeleteUser;
 using Notes.DTOs.Users.GetUser;
 using Notes.DTOs.Users.GetUsersList;
 using Notes.DTOs.Users.SetRoleUser;
@@ -14,34 +15,31 @@ namespace Notes.Services.Users
 {
     public class UsersService : BaseService<User>, IUserService
     {
-        private readonly User? user;
-
         public UsersService(IAsyncRepository<User> repository, EFContext context, IHttpContextAccessor httpContext)
-            : base(repository, context)
+            : base(repository, context, httpContext)
         {
-            this.user = CurrentUser.GetUser(context, httpContext.HttpContext!.User);
         }
 
         public async Task<GetUsersListResponse> GetUsersListAsync(GetUsersListRequest request)
         {
-            IEnumerable<User>? users = await repository.GetAllAsync(x => true);
+            IEnumerable<User>? users = await repository.GetAllAsync(user => user.Person);
 
             if (users != null)
             {
-                var totalNotes = users?.ToList().Count ?? 0;
+                var totalUsers = users?.ToList().Count ?? 0;
 
                 var result = users?
                     .Skip(request.PageNumber * request.PageSize)
                     .Take(request.PageSize);
 
-                var tatalPages = (int)Math.Ceiling(((decimal)totalNotes / request.PageSize));
+                var tatalPages = (int)Math.Ceiling(((decimal)totalUsers / request.PageSize));
 
                 return new GetUsersListResponse()
                 {
                     Users = result,
                     PageSize = request.PageSize,
                     PageNumber = request.PageNumber,
-                    TotalNotes = totalNotes,
+                    TotalUsers = totalUsers,
                     TotalPages = tatalPages,
                 };
             }
@@ -54,7 +52,10 @@ namespace Notes.Services.Users
 
         public async Task<GetUserResponse> GetUserAsync(GetUserRequest request)
         {
-            User? user = await repository.GetAsync(user => user.Id == request.Id);
+            User? user = await repository.GetAsync(
+                user => user.Id == request.Id,
+                user => user.Person);
+
             return new GetUserResponse(user);
         }
 
@@ -62,7 +63,7 @@ namespace Notes.Services.Users
         {
             User? user = await repository.GetAsync(user => user.Id == request.Id);
 
-            if (user != null)
+            if (user != null && this.user!.Id != user.Id)
             {
                 user.Role = request.Role.ToString();
                 await repository.UpdateAsync(user);
@@ -70,6 +71,19 @@ namespace Notes.Services.Users
             }
 
             return new SetRoleUserResponse(false);
+        }
+
+        public async Task<DeleteUserResponse> DeleteUserAsync(DeleteUserRequest request)
+        {
+            User? user = await repository.GetAsync(user => user.Id == request.Id);
+
+            if (user != null)
+            {
+                await repository.DeleteAsync(user);
+                return new DeleteUserResponse(true);
+            }
+
+            return new DeleteUserResponse(false);
         }
     }
 }
