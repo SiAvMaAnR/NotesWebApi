@@ -1,7 +1,7 @@
-﻿using Notes.Domain.Models;
+﻿using Notes.Domain.Enums;
+using Notes.Domain.Models;
 using Notes.DTOs.Service.Account.Edit;
 using Notes.DTOs.Service.Account.Login;
-using Notes.DTOs.Service.Account.Logout;
 using Notes.DTOs.Service.Account.Register;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Infrastructure.Security;
@@ -17,9 +17,18 @@ namespace Notes.Services.Account
         {
         }
 
-        public Task<EditResponse> EditAccountAsync(EditRequest request)
+        public async Task<EditResponse> EditAccountAsync(EditRequest request)
         {
-            throw new NotImplementedException();
+            if (this.user != null)
+            {
+                user.Email = request.Email;
+                user.Person.Name = request.Name;
+                user.Person.Age = request.Age;
+
+                await repository.UpdateAsync(user);
+                return new EditResponse(true);
+            }
+            return new EditResponse(false);
         }
 
         public async Task<LoginResponse> LoginAccountAsync(LoginRequest request)
@@ -38,14 +47,26 @@ namespace Notes.Services.Account
             };
         }
 
-        public Task<LogoutResponse> LogoutAccountAsync(LogoutRequest request)
+        public async Task<RegisterResponse> RegisterAccountAsync(RegisterRequest request)
         {
-            throw new NotImplementedException();
-        }
+            if (AuthOptions.CreatePasswordHash(request.Password, out byte[]? passwordHash, out byte[]? passwordSalt))
+            {
+                await repository.AddAsync(new User()
+                {
+                    Email = request.Email,
+                    PasswordHash = passwordHash!,
+                    PasswordSalt = passwordSalt!,
+                    Role = Role.User.ToString(),
 
-        public Task<RegisterResponse> RegisterAccountAsync(RegisterRequest request)
-        {
-            throw new NotImplementedException();
+                    Person = new Person()
+                    {
+                        Name = request.Name,
+                        Age = request.Age,
+                    }
+                });
+                return new RegisterResponse(true);
+            }
+            return new RegisterResponse(false);
         }
     }
 }

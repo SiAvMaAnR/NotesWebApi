@@ -69,7 +69,7 @@ namespace Notes.Services.Notes
         public async Task<GetNotesListResponse> GetNotesListAsync(GetNotesListRequest request)
         {
             IEnumerable<Note>? notes = await repository
-                .GetAllAsync(note => user!.Id == note.UserId, note => note.User);
+                .GetAllAsync(note => (user?.Id ?? -1) == note.UserId, note => note.User);
 
             if (notes != null)
             {

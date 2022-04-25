@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Notes.Domain.Enums;
 using Notes.Domain.Models;
 using Notes.DTOs.Controller.Account;
+using Notes.DTOs.Service.Account.Edit;
 using Notes.DTOs.Service.Account.Login;
+using Notes.DTOs.Service.Account.Register;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Infrastructure.Security;
 using Notes.Interfaces;
@@ -41,7 +43,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     return NotFound(new
                     {
                         status = TStatusCode.NotFound,
-                        text = "User not found!"
+                        text = "Account not found!"
                     });
 
                 return Ok(new
@@ -59,11 +61,10 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 return BadRequest(new
                 {
                     status = TStatusCode.BadRequest,
-                    text = "Failed to get user!"
+                    text = "Failed to get account!"
                 });
             }
         }
-
 
         [HttpPost("Register")]
         public async Task<IActionResult> Post([FromBody] RegisterDto register)
@@ -80,24 +81,16 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                         status = TStatusCode.BadRequest
                     });
 
-                if (AuthOptions.CreatePasswordHash(register.Password, out byte[]? passwordHash, out byte[]? passwordSalt))
+                var result = await service.RegisterAccountAsync(new RegisterRequest()
                 {
-                    await context.Users.AddAsync(new User()
-                    {
-                        Email = register.Email,
-                        PasswordHash = passwordHash!,
-                        PasswordSalt = passwordSalt!,
-                        Role = Role.User.ToString(),
+                    Email = register.Email,
+                    Password = register.Password,
+                    Name = register.Name,
+                    Age = register.Age
+                });
 
-                        Person = new Person()
-                        {
-                            Name = register.Name,
-                            Age = register.Age,
-                        }
-                    });
-
-                    await context.SaveChangesAsync();
-
+                if (result.IsAdded)
+                {
                     return Ok(new
                     {
                         title = "Success!",
@@ -122,7 +115,6 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
         }
 
-
         [HttpPost("Login")]
         public async Task<IActionResult> Post([FromBody] LoginDto login)
         {
@@ -137,7 +129,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 if (result.User == null)
                     return NotFound(new
                     {
-                        title = "User is not found!",
+                        title = "Account is not found!",
                         status = TStatusCode.NotFound
                     });
 
@@ -170,14 +162,42 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
         }
 
-
-        [HttpPost("Logout")]
-        public async Task<IActionResult> Post()
+        [Authorize]
+        [HttpPut("Edit")]
+        public async Task<IActionResult> Put([FromBody] EditDto edit)
         {
-            return await Task.FromResult(Unauthorized(new
+            try
             {
-                aaa = "HANA"
-            }));
+                if (!ModelState.IsValid)
+                    return BadRequest(new
+                    {
+                        status = TStatusCode.BadRequest,
+                        text = "Incorrect data!"
+                    });
+
+                var result = await service.EditAccountAsync(new EditRequest()
+                {
+                    Email = edit.Email,
+                    Name = edit.Name,
+                    Age = edit.Age
+                });
+
+                if (!result.IsSuccess) throw new Exception();
+
+                return Ok(new
+                {
+                    status = TStatusCode.OK,
+                    text = "Success!",
+                });
+            }
+            catch (Exception)
+            {
+                return BadRequest(new
+                {
+                    status = TStatusCode.BadRequest,
+                    text = "Failed to update account!"
+                });
+            }
         }
     }
 }

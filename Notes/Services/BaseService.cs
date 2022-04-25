@@ -9,6 +9,7 @@ namespace Notes.Services
     {
         protected readonly IAsyncRepository<TEntity> repository;
         protected readonly EFContext context;
+        protected readonly IHttpContextAccessor httpContext;
         protected readonly User? user;
         protected readonly IConfiguration configuration;
 
@@ -16,6 +17,7 @@ namespace Notes.Services
         {
             this.repository = repository;
             this.context = context;
+            this.httpContext = httpContext;
             this.user = CurrentUser.GetUser(context, httpContext.HttpContext!.User);
             this.configuration = configuration;
         }

@@ -2,5 +2,12 @@
 {
     public class RegisterResponse
     {
+        public RegisterResponse(bool isAdded)
+        {
+            IsAdded = isAdded;
+        }
+        public RegisterResponse() { }
+
+        public bool IsAdded { get; set; } = false;
     }
 }

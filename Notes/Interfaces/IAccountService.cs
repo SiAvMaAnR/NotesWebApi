@@ -1,7 +1,6 @@
 ﻿using Notes.Domain.Models;
 using Notes.DTOs.Service.Account.Edit;
 using Notes.DTOs.Service.Account.Login;
-using Notes.DTOs.Service.Account.Logout;
 using Notes.DTOs.Service.Account.Register;
 
 namespace Notes.Interfaces

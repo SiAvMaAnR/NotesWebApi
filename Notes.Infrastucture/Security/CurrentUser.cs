@@ -36,7 +36,7 @@ namespace Notes.Infrastucture.Security
         public static User? GetUser(EFContext context, ClaimsPrincipal claimsPrincipal)
         {
             string email = GetEmail(claimsPrincipal);
-            return context.Users.FirstOrDefault(u => u.Email == email);
+            return context.Users.Include(user=>user.Person).FirstOrDefault(u => u.Email == email);
         }
     }
 }
