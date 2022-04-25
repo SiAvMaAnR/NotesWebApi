@@ -6,7 +6,9 @@ using Notes.DTOs.Service.Account.Register;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Infrastructure.Security;
 using Notes.Infrastucture.Interfaces;
+using Notes.Infrastucture.Security;
 using Notes.Interfaces;
+using System.Security.Claims;
 
 namespace Notes.Services.Account
 {
@@ -21,7 +23,7 @@ namespace Notes.Services.Account
         {
             if (this.user != null)
             {
-                user.Email = request.Email;
+                user.Login = request.Login;
                 user.Person.Name = request.Name;
                 user.Person.Age = request.Age;
 
@@ -54,6 +56,7 @@ namespace Notes.Services.Account
                 await repository.AddAsync(new User()
                 {
                     Email = request.Email,
+                    Login = request.Login,
                     PasswordHash = passwordHash!,
                     PasswordSalt = passwordSalt!,
                     Role = Role.User.ToString(),

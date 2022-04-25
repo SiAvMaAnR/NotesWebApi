@@ -9,6 +9,7 @@ using Notes.DTOs.Service.Account.Login;
 using Notes.DTOs.Service.Account.Register;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Infrastructure.Security;
+using Notes.Infrastucture.Security;
 using Notes.Interfaces;
 using System.Security.Claims;
 
@@ -84,6 +85,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 var result = await service.RegisterAccountAsync(new RegisterRequest()
                 {
                     Email = register.Email,
+                    Login = register.Login,
                     Password = register.Password,
                     Name = register.Name,
                     Age = register.Age
@@ -162,8 +164,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
         }
 
-        [Authorize]
-        [HttpPut("Edit")]
+        [HttpPut("Edit"), Authorize]
         public async Task<IActionResult> Put([FromBody] EditDto edit)
         {
             try
@@ -177,11 +178,10 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
                 var result = await service.EditAccountAsync(new EditRequest()
                 {
-                    Email = edit.Email,
+                    Login = edit.Login,
                     Name = edit.Name,
-                    Age = edit.Age
+                    Age = edit.Age,
                 });
-
                 if (!result.IsSuccess) throw new Exception();
 
                 return Ok(new

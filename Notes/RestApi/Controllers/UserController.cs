@@ -8,6 +8,7 @@ using Notes.DTOs.Service.Users.GetUsersList;
 using Notes.DTOs.Service.Users.SetRoleUser;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace Notes.RestApi.Controllers
 {
@@ -29,7 +30,7 @@ namespace Notes.RestApi.Controllers
         }
 
         [HttpGet, Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Get(int pageNumber, int pageSize)
+        public async Task<IActionResult> Get([Required]int pageNumber, [Required] int pageSize)
         {
             try
             {

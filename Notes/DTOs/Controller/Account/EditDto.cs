@@ -5,9 +5,8 @@ namespace Notes.DTOs.Controller.Account
     public class EditDto
     {
         [Required]
-        [EmailAddress]
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
+        [StringLength(20, MinimumLength = 4)]
+        public string Login { get; set; }
 
         [StringLength(20, MinimumLength = 3)]
         [Required]
