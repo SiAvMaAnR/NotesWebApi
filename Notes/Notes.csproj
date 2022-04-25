@@ -18,8 +18,4 @@
     <ProjectReference Include="..\Notes.Infrastucture\Notes.Infrastucture.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\Service\Account\" />
-  </ItemGroup>
-
 </Project>

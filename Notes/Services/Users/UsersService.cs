@@ -11,8 +11,8 @@ namespace Notes.Services.Users
 {
     public class UsersService : BaseService<User>, IUserService
     {
-        public UsersService(IAsyncRepository<User> repository, EFContext context, IHttpContextAccessor httpContext)
-            : base(repository, context, httpContext)
+        public UsersService(IAsyncRepository<User> repository, EFContext context, IHttpContextAccessor httpContext, IConfiguration configuration)
+            : base(repository, context, httpContext, configuration)
         {
         }
 

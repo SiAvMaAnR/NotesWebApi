@@ -10,6 +10,7 @@ namespace Notes.Interfaces
 {
     public interface INoteService
     {
+        User? User { get; }
         Task<AddNoteResponse> AddNoteAsync(AddNoteRequest request);
         Task<DeleteNoteResponse> DeleteNoteAsync(DeleteNoteRequest request);
         Task<GetNotesListResponse> GetNotesListAsync(GetNotesListRequest request);

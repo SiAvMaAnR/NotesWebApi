@@ -1,12 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Notes.Domain.Enums;
-using Notes.Domain.Models;
-using Notes.DTOs;
 using Notes.DTOs.Controller.Notes;
 using Notes.DTOs.Service.Notes.AddNote;
 using Notes.DTOs.Service.Notes.DeleteNote;
@@ -14,9 +8,7 @@ using Notes.DTOs.Service.Notes.GetNote;
 using Notes.DTOs.Service.Notes.GetNotesList;
 using Notes.DTOs.Service.Notes.UpdateNote;
 using Notes.Infrastructure.ApplicationContext;
-using Notes.Infrastucture.Interfaces;
 using Notes.Interfaces;
-using System.Security.Claims;
 
 namespace Notes.Api.Presentation.RestApi.Controllers
 {
@@ -38,16 +30,18 @@ namespace Notes.Api.Presentation.RestApi.Controllers
         }
 
         [HttpGet, Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Get([FromQuery]GetNoteDto getNoteDto)
+        public async Task<IActionResult> Get([FromQuery] GetNoteDto getNoteDto)
         {
             try
             {
                 if (User == null)
+                {
                     return NotFound(new
                     {
                         status = TStatusCode.NotFound,
                         text = "User not found!"
                     });
+                }
 
                 var result = await service.GetNotesListAsync(new GetNotesListRequest()
                 {
@@ -57,11 +51,13 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 });
 
                 if (result.Notes == null)
+                {
                     return NotFound(new
                     {
                         status = TStatusCode.NotFound,
                         text = "Notes not found!"
                     });
+                }
 
                 return Ok(new
                 {
@@ -95,18 +91,22 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 var result = await service.GetNoteAsync(new GetNoteRequest(id));
 
                 if (User == null)
+                {
                     return NotFound(new
                     {
                         status = TStatusCode.NotFound,
                         text = "User not found!"
                     });
+                }
 
                 if (result.Note == null)
+                {
                     return NotFound(new
                     {
                         status = TStatusCode.NotFound,
                         text = "Note not found!"
                     });
+                }
 
                 return Ok(new
                 {
@@ -134,11 +134,13 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             try
             {
                 if (!ModelState.IsValid)
+                {
                     return BadRequest(new
                     {
                         status = TStatusCode.BadRequest,
                         text = "Incorrect data!"
                     });
+                }
 
                 var result = await service.AddNoteAsync(new AddNoteRequest()
                 {
@@ -148,12 +150,13 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 });
 
                 if (result.Note == null)
+                {
                     return NotFound(new
                     {
                         status = TStatusCode.NotFound,
                         text = "Note not found!"
                     });
-
+                }
 
                 return Ok(new
                 {
@@ -183,18 +186,22 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 var result = await service.DeleteNoteAsync(new DeleteNoteRequest(id));
 
                 if (User == null)
+                {
                     return NotFound(new
                     {
                         status = TStatusCode.NotFound,
                         text = "User not found!"
                     });
+                }
 
                 if (!result.IsDeleted)
+                {
                     return BadRequest(new
                     {
                         status = TStatusCode.BadRequest,
                         text = "Failed to delete note!"
                     });
+                }
 
                 return Ok(new
                 {
@@ -218,18 +225,22 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             try
             {
                 if (!ModelState.IsValid)
+                {
                     return BadRequest(new
                     {
                         status = TStatusCode.BadRequest,
                         text = "Incorrect data!"
                     });
+                }
 
                 if (User == null)
+                {
                     return NotFound(new
                     {
                         status = TStatusCode.NotFound,
                         text = "User not found!"
                     });
+                }
 
                 var result = await service.UpdateNoteAsync(new UpdateNoteRequest()
                 {
@@ -240,11 +251,13 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 });
 
                 if (!result.IsSuccess)
+                {
                     return NotFound(new
                     {
                         status = TStatusCode.NotFound,
                         text = "Note not found!",
                     });
+                }
 
                 return Ok(new
                 {

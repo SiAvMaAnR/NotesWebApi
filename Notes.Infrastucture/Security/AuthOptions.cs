@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Notes.Domain.Models;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,12 +11,14 @@ namespace Notes.Infrastructure.Security
 {
     public static class AuthOptions
     {
-        public static Task<string> CreateTokenAsync(User user, string secretKey)
+        public static Task<string> CreateTokenAsync(User? user, IConfiguration configuration)
         {
             return Task.Run(() =>
             {
                 try
                 {
+                    if (user == null) throw new Exception();
+
                     List<Claim> claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -25,18 +28,20 @@ namespace Notes.Infrastructure.Security
 
                     ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimTypes.Name, ClaimTypes.Role);
 
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("Authorization:SecretKey").Value));
 
                     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
                     var token = new JwtSecurityToken(
+                        audience: configuration.GetSection("Authorization:Audience").Value,
+                        issuer: configuration.GetSection("Authorization:Issuer").Value,
                         claims: claims,
-                        expires: DateTime.Now.AddMinutes(30),
+                        expires: DateTime.Now.AddMinutes(double.Parse(configuration.GetSection("Authorization:Lifetime").Value)),
                         signingCredentials: creds);
 
                     return new JwtSecurityTokenHandler().WriteToken(token);
                 }
-                catch
+                catch (Exception)
                 {
                     return "";
                 }
@@ -55,7 +60,7 @@ namespace Notes.Infrastructure.Security
                 }
                 return true;
             }
-            catch
+            catch (Exception)
             {
                 passwordSalt = default;
                 passwordHash = default;

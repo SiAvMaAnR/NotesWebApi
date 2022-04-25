@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Notes.Domain.Enums;
 using Notes.Domain.Models;
 using Notes.DTOs.Controller.Account;
+using Notes.DTOs.Service.Account.Login;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Infrastructure.Security;
 using Notes.Interfaces;
@@ -16,12 +17,12 @@ namespace Notes.Api.Presentation.RestApi.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly IUserService service;
+        private readonly IAccountService service;
         private readonly EFContext context;
         private readonly ILogger logger;
         private readonly IConfiguration configuration;
 
-        public AccountController(IUserService service, EFContext context, ILogger<AccountController> logger, IConfiguration configuration)
+        public AccountController(IAccountService service, EFContext context, ILogger<AccountController> logger, IConfiguration configuration)
         {
             this.service = service;
             this.context = context;
@@ -127,40 +128,33 @@ namespace Notes.Api.Presentation.RestApi.Controllers
         {
             try
             {
-                User? user = await context.Users.FirstOrDefaultAsync(user => user.Email == login.Email);
+                var result = await service.LoginAccountAsync(new LoginRequest()
+                {
+                    Email = login.Email,
+                    Password = login.Password,
+                });
 
-                if (user == null)
+                if (result.User == null)
                     return NotFound(new
                     {
                         title = "User is not found!",
                         status = TStatusCode.NotFound
                     });
 
-                if (!AuthOptions.VerifyPasswordHash(login.Password, user.PasswordHash, user.PasswordSalt))
+                if (!result.IsVerify)
                     return BadRequest(new
                     {
                         title = "Incorrect password!",
                         status = TStatusCode.BadRequest
                     });
 
-                string secretKey = configuration.GetSection("Authorization:SecretKey").Value;
-
-                if (string.IsNullOrEmpty(secretKey))
-                    return BadRequest(new
-                    {
-                        title = "Failed to create token!",
-                        status = TStatusCode.BadRequest
-                    });
-
-
                 return Ok(new
                 {
                     data = new
                     {
-                        token = await AuthOptions.CreateTokenAsync(user, secretKey),
+                        token = result.Token,
                         type = "Bearer"
                     },
-
                     title = "Success!",
                     status = TStatusCode.OK,
                 });
@@ -174,6 +168,16 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 });
             }
 
+        }
+
+
+        [HttpPost("Logout")]
+        public async Task<IActionResult> Post()
+        {
+            return await Task.FromResult(Unauthorized(new
+            {
+                aaa = "HANA"
+            }));
         }
     }
 }

@@ -15,12 +15,12 @@ using Notes.Interfaces;
 using System.Linq.Expressions;
 using System.Security.Claims;
 
-namespace Notes.Services
+namespace Notes.Services.Notes
 {
     public class NotesService : BaseService<Note>, INoteService
     {
-        public NotesService(IAsyncRepository<Note> repository, EFContext context, IHttpContextAccessor httpContext)
-            : base(repository, context, httpContext)
+        public NotesService(IAsyncRepository<Note> repository, EFContext context, IHttpContextAccessor httpContext, IConfiguration configuration)
+            : base(repository, context, httpContext, configuration)
         {
         }
 
