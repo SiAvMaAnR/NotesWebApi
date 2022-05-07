@@ -5,9 +5,8 @@ using Notes.DTOs.Service.Account.Register;
 
 namespace Notes.Interfaces
 {
-    public interface IAccountService
+    public interface IAccountService:IBaseService
     {
-        User? User { get; }
         Task<LoginResponse> LoginAccountAsync(LoginRequest request);
         Task<RegisterResponse> RegisterAccountAsync(RegisterRequest request);
         Task<EditResponse> EditAccountAsync(EditRequest request);

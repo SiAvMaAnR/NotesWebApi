@@ -4,13 +4,11 @@ using Notes.DTOs.Service.Notes.DeleteNote;
 using Notes.DTOs.Service.Notes.GetNote;
 using Notes.DTOs.Service.Notes.GetNotesList;
 using Notes.DTOs.Service.Notes.UpdateNote;
-using System.Linq.Expressions;
 
 namespace Notes.Interfaces
 {
-    public interface INoteService
+    public interface INoteService: IBaseService
     {
-        User? User { get; }
         Task<AddNoteResponse> AddNoteAsync(AddNoteRequest request);
         Task<DeleteNoteResponse> DeleteNoteAsync(DeleteNoteRequest request);
         Task<GetNotesListResponse> GetNotesListAsync(GetNotesListRequest request);
