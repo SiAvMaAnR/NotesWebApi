@@ -87,7 +87,8 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     Email = register.Email,
                     Login = register.Login,
                     Password = register.Password,
-                    Name = register.Name,
+                    Firstname = register.Firstname,
+                    Surname = register.Surname,
                     Age = register.Age
                 });
 
@@ -179,7 +180,8 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 var result = await service.EditAccountAsync(new EditRequest()
                 {
                     Login = edit.Login,
-                    Name = edit.Name,
+                    Firstname = edit.Firstname,
+                    Surname = edit.Surname,
                     Age = edit.Age,
                 });
                 if (!result.IsSuccess) throw new Exception();

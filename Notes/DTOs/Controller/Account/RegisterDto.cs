@@ -26,7 +26,11 @@ namespace Notes.DTOs.Controller.Account
 
         [StringLength(20, MinimumLength = 3)]
         [Required]
-        public string Name { get; set; }
+        public string Firstname { get; set; }
+
+        [StringLength(20, MinimumLength = 3)]
+        [Required]
+        public string Surname { get; set; }
 
         [Range(1, 150)]
         [Required]

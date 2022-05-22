@@ -138,3 +138,4 @@ D:\source\repos\Notes\NotesWebApi\Notes\obj\Debug\net6.0\Notes.genruntimeconfig.
 D:\source\repos\Notes\NotesWebApi\Notes\obj\Debug\net6.0\ref\Notes.dll
 D:\source\repos\Notes\NotesWebApi\Notes\bin\Debug\net6.0\Humanizer.dll
 D:\source\repos\Notes\NotesWebApi\Notes\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
+D:\source\repos\Notes\NotesWebApi\Notes\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll

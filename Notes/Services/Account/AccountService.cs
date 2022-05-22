@@ -24,7 +24,8 @@ namespace Notes.Services.Account
             if (this.user != null)
             {
                 user.Login = request.Login;
-                user.Person.Name = request.Name;
+                user.Person.Firstname = request.Firstname;
+                user.Person.Surname = request.Surname;
                 user.Person.Age = request.Age;
 
                 await repository.UpdateAsync(user);
@@ -63,7 +64,8 @@ namespace Notes.Services.Account
 
                     Person = new Person()
                     {
-                        Name = request.Name,
+                        Firstname = request.Firstname,
+                        Surname = request.Surname,
                         Age = request.Age,
                     }
                 });
