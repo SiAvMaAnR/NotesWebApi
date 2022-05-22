@@ -43,26 +43,20 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 if (user == null)
                     return NotFound(new
                     {
-                        status = TStatusCode.NotFound,
-                        text = "Account not found!"
+                        message = "Account not found!"
                     });
 
                 return Ok(new
                 {
-                    data = new
-                    {
-                        user = user,
-                    },
-                    status = TStatusCode.OK,
-                    text = "Success!"
+                    response = new { user = user },
+                    message = "Success!"
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    status = TStatusCode.BadRequest,
-                    text = "Failed to get account!"
+                    message = "Failed to get account!"
                 });
             }
         }
@@ -73,13 +67,15 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             try
             {
                 if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+                    return BadRequest(new
+                    {
+                        message = "Incorrect data!"
+                    });
 
                 if (context.Users.Any(user => user.Email == register.Email))
                     return BadRequest(new
                     {
-                        title = "This user already exists!",
-                        status = TStatusCode.BadRequest
+                        message = "This user already exists!"
                     });
 
                 var result = await service.RegisterAccountAsync(new RegisterRequest()
@@ -96,23 +92,20 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 {
                     return Ok(new
                     {
-                        title = "Success!",
-                        status = TStatusCode.OK
+                        message = "Success!",
                     });
                 }
 
                 return BadRequest(new
                 {
-                    title = "Failed to create an account!",
-                    status = TStatusCode.BadRequest
+                    message = "Failed to create an account!",
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    title = "Failed to create an account!",
-                    status = TStatusCode.BadRequest
+                    message = "Failed to create an account!",
                 });
             }
 
@@ -132,34 +125,30 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 if (result.User == null)
                     return NotFound(new
                     {
-                        title = "Account is not found!",
-                        status = TStatusCode.NotFound
+                        message = "Account is not found!"
                     });
 
                 if (!result.IsVerify)
                     return BadRequest(new
                     {
-                        title = "Incorrect password!",
-                        status = TStatusCode.BadRequest
+                        message = "Incorrect password!"
                     });
 
                 return Ok(new
                 {
-                    data = new
+                    response = new
                     {
                         token = result.Token,
                         type = "Bearer"
                     },
-                    title = "Success!",
-                    status = TStatusCode.OK,
+                    message = "Success!"
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    title = "Failed to create token!",
-                    status = TStatusCode.BadRequest
+                    message = "Failed to create token!"
                 });
             }
 
@@ -173,8 +162,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(new
                     {
-                        status = TStatusCode.BadRequest,
-                        text = "Incorrect data!"
+                        message = "Incorrect data!"
                     });
 
                 var result = await service.EditAccountAsync(new EditRequest()
@@ -188,16 +176,14 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
                 return Ok(new
                 {
-                    status = TStatusCode.OK,
-                    text = "Success!",
+                    message = "Success!"
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    status = TStatusCode.BadRequest,
-                    text = "Failed to update account!"
+                    message = "Failed to update account!"
                 });
             }
         }

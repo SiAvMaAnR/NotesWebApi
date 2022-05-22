@@ -38,8 +38,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 {
                     return NotFound(new
                     {
-                        status = TStatusCode.NotFound,
-                        text = "User not found!"
+                        message = "User not found!"
                     });
                 }
 
@@ -54,14 +53,13 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 {
                     return NotFound(new
                     {
-                        status = TStatusCode.NotFound,
-                        text = "Notes not found!"
+                        message = "Notes not found!"
                     });
                 }
 
                 return Ok(new
                 {
-                    data = new
+                    response = new
                     {
                         notes = result.Notes,
                         pageNumber = result.PageNumber,
@@ -69,16 +67,14 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                         totalNotes = result.TotalNotes,
                         totalPages = result.TotalPages
                     },
-                    status = TStatusCode.OK,
-                    text = "Success!"
+                    message = "Success!"
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    status = TStatusCode.BadRequest,
-                    text = "Failed to get notes!"
+                    message = "Failed to get notes!"
                 });
             }
         }
@@ -94,8 +90,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 {
                     return NotFound(new
                     {
-                        status = TStatusCode.NotFound,
-                        text = "User not found!"
+                        message = "User not found!"
                     });
                 }
 
@@ -103,27 +98,21 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 {
                     return NotFound(new
                     {
-                        status = TStatusCode.NotFound,
-                        text = "Note not found!"
+                        message = "Note not found!"
                     });
                 }
 
                 return Ok(new
                 {
-                    data = new
-                    {
-                        note = result.Note
-                    },
-                    status = TStatusCode.OK,
-                    text = "Success!"
+                    response = new { note = result.Note },
+                    message = "Success!"
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    status = TStatusCode.BadRequest,
-                    text = "Failed to get notes!"
+                    message = "Failed to get notes!"
                 });
             }
         }
@@ -137,8 +126,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 {
                     return BadRequest(new
                     {
-                        status = TStatusCode.BadRequest,
-                        text = "Incorrect data!"
+                        message = "Incorrect data!"
                     });
                 }
 
@@ -153,27 +141,21 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 {
                     return NotFound(new
                     {
-                        status = TStatusCode.NotFound,
-                        text = "Note not found!"
+                        message = "Note not found!"
                     });
                 }
 
                 return Ok(new
                 {
-                    data = new
-                    {
-                        note = result.Note
-                    },
-                    status = TStatusCode.OK,
-                    text = "Success!",
+                    response = new { note = result.Note },
+                    message = "Success!",
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    status = TStatusCode.BadRequest,
-                    text = "Unable to recognize note!"
+                    message = "Unable to recognize note!"
                 });
             }
         }
@@ -189,8 +171,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 {
                     return NotFound(new
                     {
-                        status = TStatusCode.NotFound,
-                        text = "User not found!"
+                        message = "User not found!"
                     });
                 }
 
@@ -198,23 +179,20 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 {
                     return BadRequest(new
                     {
-                        status = TStatusCode.BadRequest,
-                        text = "Failed to delete note!"
+                        message = "Failed to delete note!"
                     });
                 }
 
                 return Ok(new
                 {
-                    status = TStatusCode.OK,
-                    text = "Success!"
+                    message = "Success!"
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    status = TStatusCode.BadRequest,
-                    text = "Failed to delete note!"
+                    message = "Failed to delete note!"
                 });
             }
         }
@@ -228,8 +206,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 {
                     return BadRequest(new
                     {
-                        status = TStatusCode.BadRequest,
-                        text = "Incorrect data!"
+                        message = "Incorrect data!"
                     });
                 }
 
@@ -237,8 +214,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 {
                     return NotFound(new
                     {
-                        status = TStatusCode.NotFound,
-                        text = "User not found!"
+                        message = "User not found!"
                     });
                 }
 
@@ -254,23 +230,20 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 {
                     return NotFound(new
                     {
-                        status = TStatusCode.NotFound,
-                        text = "Note not found!",
+                        message = "Note not found!",
                     });
                 }
 
                 return Ok(new
                 {
-                    status = TStatusCode.OK,
-                    text = "Success!",
+                    message = "Success!",
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    status = TStatusCode.BadRequest,
-                    text = "Failed to update note!"
+                    message = "Failed to update note!"
                 });
             }
         }

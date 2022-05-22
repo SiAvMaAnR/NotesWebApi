@@ -30,7 +30,7 @@ namespace Notes.RestApi.Controllers
         }
 
         [HttpGet, Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Get([Required]int pageNumber, [Required] int pageSize)
+        public async Task<IActionResult> Get([Required] int pageNumber, [Required] int pageSize)
         {
             try
             {
@@ -39,13 +39,12 @@ namespace Notes.RestApi.Controllers
                 if (result.Users == null)
                     return NotFound(new
                     {
-                        status = TStatusCode.NotFound,
-                        text = "Users not found!"
+                        message = "Users not found!"
                     });
 
                 return Ok(new
                 {
-                    data = new
+                    response = new
                     {
                         users = result.Users,
                         pageNumber = result.PageNumber,
@@ -53,16 +52,14 @@ namespace Notes.RestApi.Controllers
                         totalUsers = result.TotalUsers,
                         totalPages = result.TotalPages
                     },
-                    status = TStatusCode.OK,
-                    text = "Success!"
+                    message = "Success!"
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    status = TStatusCode.BadRequest,
-                    text = "Failed to get users!"
+                    message = "Failed to get users!"
                 });
             }
         }
@@ -77,26 +74,20 @@ namespace Notes.RestApi.Controllers
                 if (result.User == null)
                     return NotFound(new
                     {
-                        status = TStatusCode.NotFound,
-                        text = "User not found!"
+                        message = "User not found!"
                     });
 
                 return Ok(new
                 {
-                    data = new
-                    {
-                        user = result.User,
-                    },
-                    status = TStatusCode.OK,
-                    text = "Success!"
+                    response = new { user = result.User },
+                    message = "Success!"
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    status = TStatusCode.BadRequest,
-                    text = "Failed to get user!"
+                    message = "Failed to get user!"
                 });
             }
         }
@@ -109,8 +100,7 @@ namespace Notes.RestApi.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(new
                     {
-                        status = TStatusCode.BadRequest,
-                        text = "Incorrect data!"
+                        message = "Incorrect data!"
                     });
 
                 var result = await service.SetRoleUserAsync(new SetRoleUserRequest()
@@ -123,16 +113,14 @@ namespace Notes.RestApi.Controllers
 
                 return Ok(new
                 {
-                    status = TStatusCode.OK,
-                    text = "Success!",
+                    message = "Success!"
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    status = TStatusCode.BadRequest,
-                    text = "Failed to update user!"
+                    message = "Failed to update user!"
                 });
             }
         }
@@ -147,22 +135,19 @@ namespace Notes.RestApi.Controllers
                 if (!result.IsSuccess)
                     return BadRequest(new
                     {
-                        status = TStatusCode.BadRequest,
-                        text = "Failed to delete user!"
+                        message = "Failed to delete user!"
                     });
 
                 return Ok(new
                 {
-                    status = TStatusCode.OK,
-                    text = "Success!"
+                    message = "Success!"
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    status = TStatusCode.BadRequest,
-                    text = "Failed to delete user!"
+                    message = "Failed to delete user!"
                 });
             }
         }
