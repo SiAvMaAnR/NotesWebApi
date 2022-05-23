@@ -44,7 +44,7 @@ namespace Notes.RestApi.Controllers
 
                 return Ok(new
                 {
-                    response = new
+                    data = new
                     {
                         users = result.Users,
                         pageNumber = result.PageNumber,
@@ -79,7 +79,7 @@ namespace Notes.RestApi.Controllers
 
                 return Ok(new
                 {
-                    response = new { user = result.User },
+                    data = new { user = result.User },
                     message = "Success!"
                 });
             }

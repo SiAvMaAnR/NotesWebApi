@@ -59,7 +59,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
                 return Ok(new
                 {
-                    response = new
+                    data = new
                     {
                         notes = result.Notes,
                         pageNumber = result.PageNumber,
@@ -104,7 +104,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
                 return Ok(new
                 {
-                    response = new { note = result.Note },
+                    data = new { note = result.Note },
                     message = "Success!"
                 });
             }
@@ -147,7 +147,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
                 return Ok(new
                 {
-                    response = new { note = result.Note },
+                    data = new { note = result.Note },
                     message = "Success!",
                 });
             }

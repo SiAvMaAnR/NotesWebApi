@@ -48,7 +48,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
                 return Ok(new
                 {
-                    response = new { user = user },
+                    data = new { user = user },
                     message = "Success!"
                 });
             }
@@ -136,7 +136,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
                 return Ok(new
                 {
-                    response = new
+                    data = new
                     {
                         token = result.Token,
                         type = "Bearer"
