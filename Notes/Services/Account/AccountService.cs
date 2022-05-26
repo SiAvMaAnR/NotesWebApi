@@ -46,7 +46,13 @@ namespace Notes.Services.Account
             {
                 User = user,
                 IsVerify = isVerify,
-                Token = (isVerify) ? await AuthOptions.CreateTokenAsync(user, configuration) : ""
+                Token = (isVerify) ? await AuthOptions.CreateTokenAsync(user, new Dictionary<string, string>()
+                {
+                    {"secretKey",configuration.GetSection("Authorization:SecretKey").Value },
+                    {"audience", configuration.GetSection("Authorization:Audience").Value },
+                    {"issuer" , configuration.GetSection("Authorization:Issuer").Value},
+                    {"lifeTime" , configuration.GetSection("Authorization:LifeTime").Value},
+                }) : ""
             };
         }
 

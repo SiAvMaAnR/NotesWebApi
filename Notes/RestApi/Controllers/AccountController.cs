@@ -187,5 +187,12 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 });
             }
         }
+
+
+        [HttpGet("IsAuthorized"), Authorize]
+        public async Task<IActionResult> IsAuthorized()
+        {
+            return await Task.FromResult(Ok());
+        }
     }
 }

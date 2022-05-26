@@ -11,7 +11,7 @@ namespace Notes.Infrastructure.Security
 {
     public static class AuthOptions
     {
-        public static Task<string> CreateTokenAsync(User? user, IConfiguration configuration)
+        public static Task<string> CreateTokenAsync(User? user, Dictionary<string, string>  tokenParams)
         {
             return Task.Run(() =>
             {
@@ -29,15 +29,15 @@ namespace Notes.Infrastructure.Security
 
                     ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimTypes.Name, ClaimTypes.Role);
 
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("Authorization:SecretKey").Value));
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenParams["secretKey"]));
 
                     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
                     var token = new JwtSecurityToken(
-                        audience: configuration.GetSection("Authorization:Audience").Value,
-                        issuer: configuration.GetSection("Authorization:Issuer").Value,
+                        audience: tokenParams["audience"],
+                        issuer: tokenParams["issuer"],
                         claims: claims,
-                        expires: DateTime.Now.AddMinutes(double.Parse(configuration.GetSection("Authorization:Lifetime").Value)),
+                        expires: DateTime.Now.AddMinutes(double.Parse(tokenParams["lifeTime"])),
                         signingCredentials: creds);
 
                     return new JwtSecurityTokenHandler().WriteToken(token);
