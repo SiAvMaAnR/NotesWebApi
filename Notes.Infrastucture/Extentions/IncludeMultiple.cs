@@ -10,8 +10,8 @@ namespace Notes.Infrastucture.Extentions
 {
     public static class QueryableExtention
     {
-        public static IQueryable<TEntity> MultipleInclude<TEntity>(this DbSet<TEntity> dbSet, 
-            params Expression<Func<TEntity, object>>[] includeProperties) 
+        public static IQueryable<TEntity> MultipleInclude<TEntity>(this IQueryable<TEntity> dbSet,
+            params Expression<Func<TEntity, object>>[] includeProperties)
             where TEntity : class
         {
             return includeProperties.Aggregate(dbSet.AsNoTracking(),

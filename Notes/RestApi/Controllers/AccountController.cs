@@ -189,8 +189,8 @@ namespace Notes.Api.Presentation.RestApi.Controllers
         }
 
 
-        [HttpGet("IsAuthorized"), Authorize]
-        public async Task<IActionResult> IsAuthorized()
+        [HttpPost("IsAuthorized"), Authorize]
+        public async Task<IActionResult> Post()
         {
             return await Task.FromResult(Ok());
         }

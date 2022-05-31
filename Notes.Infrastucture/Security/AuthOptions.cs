@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using Notes.Domain.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -11,7 +9,7 @@ namespace Notes.Infrastructure.Security
 {
     public static class AuthOptions
     {
-        public static Task<string> CreateTokenAsync(User? user, Dictionary<string, string>  tokenParams)
+        public static Task<string> CreateTokenAsync(User? user, Dictionary<string, string> tokenParams)
         {
             return Task.Run(() =>
             {

@@ -6,9 +6,7 @@ using Notes.DTOs.Service.Account.Register;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Infrastructure.Security;
 using Notes.Infrastucture.Interfaces;
-using Notes.Infrastucture.Security;
 using Notes.Interfaces;
-using System.Security.Claims;
 
 namespace Notes.Services.Account
 {
