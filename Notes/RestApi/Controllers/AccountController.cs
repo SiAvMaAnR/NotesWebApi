@@ -187,12 +187,5 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 });
             }
         }
-
-
-        [HttpPost("IsAuthorized"), Authorize]
-        public async Task<IActionResult> Post()
-        {
-            return await Task.FromResult(Ok());
-        }
     }
 }
