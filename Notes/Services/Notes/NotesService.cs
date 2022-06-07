@@ -2,11 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Notes.Domain.Enums;
 using Notes.Domain.Models;
-using Notes.DTOs.Notes.AddNote;
-using Notes.DTOs.Notes.DeleteNote;
-using Notes.DTOs.Notes.GetNote;
-using Notes.DTOs.Notes.GetNotesList;
-using Notes.DTOs.Notes.UpdateNote;
+using Notes.DTOs.Service.Notes.AddNote;
+using Notes.DTOs.Service.Notes.DeleteNote;
+using Notes.DTOs.Service.Notes.GetNote;
+using Notes.DTOs.Service.Notes.GetNotesList;
+using Notes.DTOs.Service.Notes.UpdateNote;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Infrastructure.Security;
 using Notes.Infrastucture.Interfaces;
@@ -15,16 +15,13 @@ using Notes.Interfaces;
 using System.Linq.Expressions;
 using System.Security.Claims;
 
-namespace Notes.Services
+namespace Notes.Services.Notes
 {
-    public class NotesService : BaseService, INoteService
+    public class NotesService : BaseService<Note>, INoteService
     {
-        private readonly User? user;
-
-        public NotesService(IAsyncRepository<Note> repository, EFContext context, IHttpContextAccessor httpContext)
-            : base(repository, context)
+        public NotesService(IAsyncRepository<Note> repository, EFContext context, IHttpContextAccessor httpContext, IConfiguration configuration)
+            : base(repository, context, httpContext, configuration)
         {
-            this.user = CurrentUser.GetUser(context, httpContext.HttpContext!.User);
         }
 
         public async Task<AddNoteResponse> AddNoteAsync(AddNoteRequest request)
@@ -36,6 +33,7 @@ namespace Notes.Services
                     Title = request.Title,
                     Description = request.Description,
                     IsDone = request.IsDone,
+                    EventDate = request.EventDate,
                     CreateDate = DateTime.Now,
                     User = user
                 };
@@ -47,20 +45,20 @@ namespace Notes.Services
                     Note = note,
                 };
             }
-            else
+
+            return new AddNoteResponse()
             {
-                return new AddNoteResponse()
-                {
-                    Note = null,
-                };
-            }
+                Note = null,
+            };
         }
 
         public async Task<DeleteNoteResponse> DeleteNoteAsync(DeleteNoteRequest request)
         {
-            Note? note = await repository.GetAsync(note => note.Id == request.Id && user!.Id == note.UserId);
+            Note? note = await repository.GetAsync(note =>
+                note.Id == request.Id &&
+                user!.Id == note.UserId);
 
-            if(note != null)
+            if (note != null)
             {
                 await repository.DeleteAsync(note);
                 return new DeleteNoteResponse(true);
@@ -71,7 +69,8 @@ namespace Notes.Services
 
         public async Task<GetNotesListResponse> GetNotesListAsync(GetNotesListRequest request)
         {
-            IEnumerable<Note>? notes = await repository.GetAllAsync(note => user!.Id == note.UserId);
+            IEnumerable<Note>? notes = await repository
+                .GetAllAsync(note => (user?.Id ?? -1) == note.UserId, note => note.User);
 
             if (notes != null)
             {
@@ -81,6 +80,9 @@ namespace Notes.Services
                         notes = notes?.OrderBy(note => note.CreateDate);
                         break;
                     case "desc_date":
+                        notes = notes?.OrderByDescending(note => note.CreateDate);
+                        break;
+                    default:
                         notes = notes?.OrderByDescending(note => note.CreateDate);
                         break;
                 };
@@ -102,19 +104,18 @@ namespace Notes.Services
                     TotalPages = tatalPages,
                 };
             }
-            else
-            {
-                return new GetNotesListResponse()
-                {
-                    Notes = null,
-                };
-            }
 
+            return new GetNotesListResponse()
+            {
+                Notes = null,
+            };
         }
 
         public async Task<GetNoteResponse> GetNoteAsync(GetNoteRequest request)
         {
-            Note? note = await repository.GetAsync(note => note.Id == request.Id && user!.Id == note.UserId);
+            Note? note = await repository.GetAsync(
+                note => note.Id == request.Id && user!.Id == note.UserId,
+                note => note.User);
 
             return new GetNoteResponse()
             {
@@ -126,16 +127,18 @@ namespace Notes.Services
         {
             Note? note = await repository.GetAsync(note => note.Id == request.Id && user!.Id == note.UserId);
 
-            if(note != null)
+            if (note != null)
             {
                 note.Title = request.Title;
                 note.Description = request.Description;
+                note.EventDate = request.EventDate;
                 note.IsDone = request.IsDone;
 
                 await repository.UpdateAsync(note);
 
                 return new UpdateNoteResponse(true);
             }
+
             return new UpdateNoteResponse(false);
         }
     }

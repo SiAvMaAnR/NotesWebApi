@@ -3,9 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Notes.Domain.Enums;
 using Notes.Domain.Models;
-using Notes.DTOs.Auth;
+using Notes.DTOs.Controller.Account;
+using Notes.DTOs.Service.Account.Edit;
+using Notes.DTOs.Service.Account.Login;
+using Notes.DTOs.Service.Account.Register;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Infrastructure.Security;
+using Notes.Infrastucture.Security;
+using Notes.Interfaces;
 using System.Security.Claims;
 
 namespace Notes.Api.Presentation.RestApi.Controllers
@@ -15,156 +20,172 @@ namespace Notes.Api.Presentation.RestApi.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        private readonly IAccountService service;
         private readonly EFContext context;
+        private readonly ILogger logger;
         private readonly IConfiguration configuration;
 
-        public AccountController(EFContext context, IConfiguration configuration)
+        public AccountController(IAccountService service, EFContext context, ILogger<AccountController> logger, IConfiguration configuration)
         {
+            this.service = service;
             this.context = context;
+            this.logger = logger;
             this.configuration = configuration;
         }
 
-        [HttpGet("/my"), Authorize(Roles = "User,Admin")]
+        [HttpGet("Info"), Authorize]
         public IActionResult Get()
         {
             try
             {
+                var user = service.User;
+
+                if (user == null)
+                    return NotFound(new
+                    {
+                        message = "Account not found!"
+                    });
+
                 return Ok(new
                 {
-                    data = new
-                    {
-                        userNameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "NONE",
-                        userName = User.FindFirstValue(ClaimTypes.Name) ?? "NONE",
-                        userRole = User.FindFirstValue(ClaimTypes.Role) ?? "NONE",
-                        userEmail = User.FindFirstValue(ClaimTypes.Email) ?? "NONE"
-                    },
-                    title = "Success!",
-                    status = TStatusCodes.OK
+                    data = new { user = user },
+                    message = "Success!"
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    title = "User not found!",
-                    status = TStatusCodes.Bad_Request
+                    message = "Failed to get account!"
                 });
             }
-            
-
         }
 
-
-        [HttpPost("/register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDto register)
+        [HttpPost("Register")]
+        public async Task<IActionResult> Post([FromBody] RegisterDto register)
         {
             try
             {
                 if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+                    return BadRequest(new
+                    {
+                        message = "Incorrect data!"
+                    });
 
                 if (context.Users.Any(user => user.Email == register.Email))
                     return BadRequest(new
                     {
-                        title = "This user already exists!",
-                        status = TStatusCodes.Bad_Request
+                        message = "This user already exists!"
                     });
 
-                if (AuthOptions.CreatePasswordHash(register.Password, out byte[]? passwordHash, out byte[]? passwordSalt))
+                var result = await service.RegisterAccountAsync(new RegisterRequest()
                 {
-                    await context.Users.AddAsync(new User()
-                    {
-                        Email = register.Email,
-                        PasswordHash = passwordHash!,
-                        PasswordSalt = passwordSalt!,
-                        Role = Roles.User.ToString(),
-                        Person = new Person()
-                        {
-                            Name = register.Name,
-                            Age = register.Age,
-                        }
-                    });
+                    Email = register.Email,
+                    Login = register.Login,
+                    Password = register.Password,
+                    Firstname = register.Firstname,
+                    Surname = register.Surname,
+                    Age = register.Age
+                });
 
-                    await context.SaveChangesAsync();
-
+                if (result.IsAdded)
+                {
                     return Ok(new
                     {
-                        title = "Success!",
-                        status = TStatusCodes.OK
+                        message = "Success!",
                     });
                 }
 
                 return BadRequest(new
                 {
-                    title = "Failed to create an account!",
-                    status = TStatusCodes.Bad_Request
+                    message = "Failed to create an account!",
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    title = "Failed to create an account!",
-                    status = TStatusCodes.Bad_Request
+                    message = "Failed to create an account!",
                 });
             }
 
         }
 
-
-        [HttpPost("/login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto login)
+        [HttpPost("Login")]
+        public async Task<IActionResult> Post([FromBody] LoginDto login)
         {
             try
             {
-                User? user = await context.Users.FirstOrDefaultAsync(user => user.Email == login.Email);
+                var result = await service.LoginAccountAsync(new LoginRequest()
+                {
+                    Email = login.Email,
+                    Password = login.Password,
+                });
 
-                if (user == null)
+                if (result.User == null)
                     return NotFound(new
                     {
-                        title = "User is not found!",
-                        status = TStatusCodes.Not_Found
+                        message = "Account is not found!"
                     });
 
-                if (!AuthOptions.VerifyPasswordHash(login.Password, user.PasswordHash, user.PasswordSalt))
+                if (!result.IsVerify)
                     return BadRequest(new
                     {
-                        title = "Incorrect password!",
-                        status = TStatusCodes.Bad_Request
+                        message = "Incorrect password!"
                     });
-
-                string secretKey = configuration.GetSection("Authorization:SecretKey").Value;
-
-                if (string.IsNullOrEmpty(secretKey))
-                    return BadRequest(new
-                    {
-                        title = "Failed to create token!",
-                        status = TStatusCodes.Bad_Request
-                    });
-
-                context.Entry(user).Reference(x => x.Person).Load();
 
                 return Ok(new
                 {
                     data = new
                     {
-                        token = await AuthOptions.CreateTokenAsync(user, secretKey),
+                        token = result.Token,
                         type = "Bearer"
                     },
-
-                    title = "Success!",
-                    status = TStatusCodes.OK,
+                    message = "Success!"
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    title = "Failed to create token!",
-                    status = TStatusCodes.Bad_Request
+                    message = "Failed to create token!"
                 });
             }
 
+        }
+
+        [HttpPut("Edit"), Authorize]
+        public async Task<IActionResult> Put([FromBody] EditDto edit)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(new
+                    {
+                        message = "Incorrect data!"
+                    });
+
+                var result = await service.EditAccountAsync(new EditRequest()
+                {
+                    Login = edit.Login,
+                    Firstname = edit.Firstname,
+                    Surname = edit.Surname,
+                    Age = edit.Age,
+                });
+                if (!result.IsSuccess) throw new Exception();
+
+                return Ok(new
+                {
+                    message = "Success!"
+                });
+            }
+            catch (Exception)
+            {
+                return BadRequest(new
+                {
+                    message = "Failed to update account!"
+                });
+            }
         }
     }
 }

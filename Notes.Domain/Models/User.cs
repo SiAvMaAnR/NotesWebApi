@@ -15,9 +15,9 @@ namespace Notes.Domain.Models
 
         public string Email { get; set; }
 
+        public string Login { get; set; }
         [JsonIgnore]
         public byte[] PasswordHash { get; set; }
-
         [JsonIgnore]
         public byte[] PasswordSalt { get; set; }
 
@@ -26,7 +26,6 @@ namespace Notes.Domain.Models
         public Person Person { get; set; }
 
         public int PersonId { get; set; }
-
         [JsonIgnore]
         public List<Note> Notes { get; set; } = new List<Note>();
     }

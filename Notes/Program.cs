@@ -1,30 +1,23 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Notes.Domain.Models;
 using Notes.Infrastructure.ApplicationContext;
-using Notes.Infrastructure.Security;
 using Notes.Infrastucture.Interfaces;
 using Notes.Infrastucture.Repositories;
 using Notes.Interfaces;
-using Notes.Services;
+using Notes.Services.Account;
+using Notes.Services.Notes;
+using Notes.Services.Users;
 using Swashbuckle.AspNetCore.Filters;
-using System.Security.Claims;
 using System.Text;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-});
-
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddLogging();
@@ -33,7 +26,12 @@ builder.Services.AddDbContext<EFContext>(options => options.UseSqlServer(connect
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IAsyncRepository<Note>, NotesRepository>();
+builder.Services.AddScoped<IAsyncRepository<User>, UsersRepository>();
+
 builder.Services.AddScoped<INoteService, NotesService>();
+builder.Services.AddScoped<IUserService, UsersService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -49,15 +47,20 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.RequireHttpsMetadata = false;
+        options.RequireHttpsMetadata = true;
         options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = false,
-            ValidateAudience = false,
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes(builder.Configuration.GetSection("Authorization:SecretKey").Value)),
+
+            ValidIssuer = builder.Configuration.GetSection("Authorization:Issuer").Value,
+            ValidAudience = builder.Configuration.GetSection("Authorization:Audience").Value,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Authorization:SecretKey").Value)),
+            LifetimeValidator = (DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters) =>
+                 (expires != null) ? DateTime.UtcNow < expires : false
         };
     });
 

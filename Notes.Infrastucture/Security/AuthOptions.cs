@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using Notes.Domain.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -10,34 +9,38 @@ namespace Notes.Infrastructure.Security
 {
     public static class AuthOptions
     {
-        public static Task<string> CreateTokenAsync(User user, string secretKey)
+        public static Task<string> CreateTokenAsync(User? user, Dictionary<string, string> tokenParams)
         {
             return Task.Run(() =>
             {
                 try
                 {
+                    if (user == null) throw new Exception();
+
                     List<Claim> claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                        new Claim(ClaimTypes.Name, user.Person?.Name ?? "NONE"),
+                        new Claim(ClaimTypes.Name, user.Login),
                         new Claim(ClaimTypes.Email, user.Email),
                         new Claim(ClaimTypes.Role, user.Role)
                     };
 
                     ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimTypes.Name, ClaimTypes.Role);
 
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenParams["secretKey"]));
 
                     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
                     var token = new JwtSecurityToken(
+                        audience: tokenParams["audience"],
+                        issuer: tokenParams["issuer"],
                         claims: claims,
-                        expires: DateTime.Now.AddMinutes(30),
+                        expires: DateTime.Now.AddMinutes(double.Parse(tokenParams["lifeTime"])),
                         signingCredentials: creds);
 
                     return new JwtSecurityTokenHandler().WriteToken(token);
                 }
-                catch
+                catch (Exception)
                 {
                     return "";
                 }
@@ -56,7 +59,7 @@ namespace Notes.Infrastructure.Security
                 }
                 return true;
             }
-            catch
+            catch (Exception)
             {
                 passwordSalt = default;
                 passwordHash = default;

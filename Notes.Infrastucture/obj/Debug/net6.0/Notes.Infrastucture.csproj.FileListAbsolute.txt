@@ -28,3 +28,5 @@ D:\source\repos\Notes\NotesWebApi\Notes.Infrastucture\obj\Debug\net6.0\Notes.Inf
 D:\source\repos\Notes\NotesWebApi\Notes.Infrastucture\obj\Debug\net6.0\refint\Notes.Infrastucture.dll
 D:\source\repos\Notes\NotesWebApi\Notes.Infrastucture\obj\Debug\net6.0\Notes.Infrastucture.pdb
 D:\source\repos\Notes\NotesWebApi\Notes.Infrastucture\obj\Debug\net6.0\ref\Notes.Infrastucture.dll
+D:\source\repos\Notes\NotesWebApi\Notes.Infrastucture\bin\Debug\net6.0\Notes.Infrastucture.runtimeconfig.json
+D:\source\repos\Notes\NotesWebApi\Notes.Infrastucture\obj\Debug\net6.0\Notes.Infrastucture.genruntimeconfig.cache

@@ -1,25 +1,29 @@
 ﻿using Notes.Domain.Models;
-using Notes.DTOs.Notes.AddNote;
-using Notes.DTOs.Notes.DeleteNote;
-using Notes.DTOs.Notes.GetNote;
-using Notes.DTOs.Notes.UpdateNote;
 using Notes.Infrastructure.ApplicationContext;
-using Notes.Infrastructure.Security;
 using Notes.Infrastucture.Interfaces;
-using Notes.Interfaces;
-using System.Security.Claims;
+using Notes.Infrastucture.Security;
 
 namespace Notes.Services
 {
-    public class BaseService
+    public class BaseService<TEntity> where TEntity : class
     {
-        protected readonly IAsyncRepository<Note> repository;
+        protected readonly IAsyncRepository<TEntity> repository;
         protected readonly EFContext context;
+        protected readonly IHttpContextAccessor httpContext;
+        protected readonly User? user;
+        protected readonly IConfiguration configuration;
 
-        public BaseService(IAsyncRepository<Note> repository, EFContext context)
+        public BaseService(IAsyncRepository<TEntity> repository, EFContext context, IHttpContextAccessor httpContext, IConfiguration configuration)
         {
             this.repository = repository;
             this.context = context;
+            this.httpContext = httpContext;
+            this.user = CurrentUser.GetUser(context, httpContext.HttpContext!.User);
+            this.configuration = configuration;
+        }
+        public User? User
+        {
+            get => user;
         }
     }
 }

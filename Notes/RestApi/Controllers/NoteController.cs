@@ -1,22 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Notes.Domain.Enums;
-using Notes.Domain.Models;
-using Notes.DTOs;
-using Notes.DTOs.Notes.AddNote;
-using Notes.DTOs.Notes.Controller;
-using Notes.DTOs.Notes.DeleteNote;
-using Notes.DTOs.Notes.GetNote;
-using Notes.DTOs.Notes.GetNotesList;
-using Notes.DTOs.Notes.UpdateNote;
+using Notes.DTOs.Controller.Notes;
+using Notes.DTOs.Service.Notes.AddNote;
+using Notes.DTOs.Service.Notes.DeleteNote;
+using Notes.DTOs.Service.Notes.GetNote;
+using Notes.DTOs.Service.Notes.GetNotesList;
+using Notes.DTOs.Service.Notes.UpdateNote;
 using Notes.Infrastructure.ApplicationContext;
-using Notes.Infrastucture.Interfaces;
 using Notes.Interfaces;
-using System.Security.Claims;
 
 namespace Notes.Api.Presentation.RestApi.Controllers
 {
@@ -37,27 +29,33 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             this.configuration = configuration;
         }
 
-
         [HttpGet, Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Get(int pageNumber, int pageSize, string sort = "asc_date")
+        public async Task<IActionResult> Get([FromQuery] GetNoteDto getNoteDto)
         {
             try
             {
                 if (User == null)
+                {
                     return NotFound(new
                     {
-                        status = TStatusCodes.Not_Found,
-                        text = "User not found!"
+                        message = "User not found!"
                     });
+                }
 
-                var result = await service.GetNotesListAsync(new GetNotesListRequest(pageNumber, pageSize, sort));
+                var result = await service.GetNotesListAsync(new GetNotesListRequest()
+                {
+                    PageNumber = getNoteDto.PageNumber,
+                    PageSize = getNoteDto.PageSize,
+                    Sort = getNoteDto.Sort
+                });
 
                 if (result.Notes == null)
+                {
                     return NotFound(new
                     {
-                        status = TStatusCodes.Not_Found,
-                        text = "Notes not found!"
+                        message = "Notes not found!"
                     });
+                }
 
                 return Ok(new
                 {
@@ -69,20 +67,17 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                         totalNotes = result.TotalNotes,
                         totalPages = result.TotalPages
                     },
-                    status = TStatusCodes.OK,
-                    text = "Success!"
+                    message = "Success!"
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    status = TStatusCodes.Bad_Request,
-                    text = "Failed to get notes!"
+                    message = "Failed to get notes!"
                 });
             }
         }
-
 
         [HttpGet("{id:int}"), Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Get(int id)
@@ -92,39 +87,35 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 var result = await service.GetNoteAsync(new GetNoteRequest(id));
 
                 if (User == null)
+                {
                     return NotFound(new
                     {
-                        status = TStatusCodes.Not_Found,
-                        text = "User not found!"
+                        message = "User not found!"
                     });
+                }
 
                 if (result.Note == null)
+                {
                     return NotFound(new
                     {
-                        status = TStatusCodes.Not_Found,
-                        text = "Note not found!"
+                        message = "Note not found!"
                     });
+                }
 
                 return Ok(new
                 {
-                    data = new
-                    {
-                        note = result.Note
-                    },
-                    status = TStatusCodes.OK,
-                    text = "Success!"
+                    data = new { note = result.Note },
+                    message = "Success!"
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    status = TStatusCodes.Bad_Request,
-                    text = "Failed to get notes!"
+                    message = "Failed to get notes!"
                 });
             }
         }
-
 
         [HttpPost, Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Post([FromBody] AddNoteDto noteDto)
@@ -132,47 +123,43 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             try
             {
                 if (!ModelState.IsValid)
+                {
                     return BadRequest(new
                     {
-                        status = TStatusCodes.Bad_Request,
-                        text = "Incorrect data!"
+                        message = "Incorrect data!"
                     });
+                }
 
                 var result = await service.AddNoteAsync(new AddNoteRequest()
                 {
                     Title = noteDto.Title,
                     Description = noteDto.Description,
                     IsDone = noteDto.IsDone,
+                    EventDate = noteDto.EventDate
                 });
 
                 if (result.Note == null)
+                {
                     return NotFound(new
                     {
-                        status = TStatusCodes.Not_Found,
-                        text = "Note not found!"
+                        message = "Note not found!"
                     });
-
+                }
 
                 return Ok(new
                 {
-                    data = new
-                    {
-                        note = result.Note
-                    },
-                    status = TStatusCodes.OK,
-                    text = "Success!",
+                    data = new { note = result.Note },
+                    message = "Success!",
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    status = TStatusCodes.Bad_Request,
-                    text = "Unable to recognize note!"
+                    message = "Unable to recognize note!"
                 });
             }
         }
-
 
         [HttpDelete, Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Delete([FromBody] int id)
@@ -182,35 +169,34 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 var result = await service.DeleteNoteAsync(new DeleteNoteRequest(id));
 
                 if (User == null)
+                {
                     return NotFound(new
                     {
-                        status = TStatusCodes.Not_Found,
-                        text = "User not found!"
+                        message = "User not found!"
                     });
+                }
 
                 if (!result.IsDeleted)
+                {
                     return BadRequest(new
                     {
-                        status = TStatusCodes.Bad_Request,
-                        text = "Failed to delete note!"
+                        message = "Failed to delete note!"
                     });
+                }
 
                 return Ok(new
                 {
-                    status = TStatusCodes.OK,
-                    text = "Success!"
+                    message = "Success!"
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    status = TStatusCodes.Bad_Request,
-                    text = "Failed to delete note!"
+                    message = "Failed to delete note!"
                 });
             }
         }
-
 
         [HttpPut, Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Put([FromBody] UpdateNoteDto noteDto)
@@ -218,18 +204,20 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             try
             {
                 if (!ModelState.IsValid)
+                {
                     return BadRequest(new
                     {
-                        status = TStatusCodes.Bad_Request,
-                        text = "Incorrect data!"
+                        message = "Incorrect data!"
                     });
+                }
 
                 if (User == null)
+                {
                     return NotFound(new
                     {
-                        status = TStatusCodes.Not_Found,
-                        text = "User not found!"
+                        message = "User not found!"
                     });
+                }
 
                 var result = await service.UpdateNoteAsync(new UpdateNoteRequest()
                 {
@@ -239,25 +227,24 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     IsDone = noteDto.IsDone,
                 });
 
-                if (!result.IsUpdate)
+                if (!result.IsSuccess)
+                {
                     return NotFound(new
                     {
-                        status = TStatusCodes.Not_Found,
-                        text = "Note not found!",
+                        message = "Note not found!",
                     });
+                }
 
                 return Ok(new
                 {
-                    status = TStatusCodes.OK,
-                    text = "Success!",
+                    message = "Success!",
                 });
             }
             catch (Exception)
             {
                 return BadRequest(new
                 {
-                    status = TStatusCodes.Bad_Request,
-                    text = "Failed to update note!"
+                    message = "Failed to update note!"
                 });
             }
         }

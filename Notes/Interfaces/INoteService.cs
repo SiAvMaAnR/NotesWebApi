@@ -1,14 +1,13 @@
 ﻿using Notes.Domain.Models;
-using Notes.DTOs.Notes.AddNote;
-using Notes.DTOs.Notes.DeleteNote;
-using Notes.DTOs.Notes.GetNote;
-using Notes.DTOs.Notes.GetNotesList;
-using Notes.DTOs.Notes.UpdateNote;
-using System.Linq.Expressions;
+using Notes.DTOs.Service.Notes.AddNote;
+using Notes.DTOs.Service.Notes.DeleteNote;
+using Notes.DTOs.Service.Notes.GetNote;
+using Notes.DTOs.Service.Notes.GetNotesList;
+using Notes.DTOs.Service.Notes.UpdateNote;
 
 namespace Notes.Interfaces
 {
-    public interface INoteService
+    public interface INoteService: IBaseService
     {
         Task<AddNoteResponse> AddNoteAsync(AddNoteRequest request);
         Task<DeleteNoteResponse> DeleteNoteAsync(DeleteNoteRequest request);
