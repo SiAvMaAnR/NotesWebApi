@@ -138,11 +138,11 @@
             },
             "Microsoft.IdentityModel.Tokens": {
               "target": "Package",
-              "version": "[6.19.0, )"
+              "version": "[6.18.0, )"
             },
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
-              "version": "[6.19.0, )"
+              "version": "[6.18.0, )"
             }
           },
           "imports": [
@@ -233,7 +233,7 @@
             },
             "Swashbuckle.AspNetCore.Filters": {
               "target": "Package",
-              "version": "[7.0.3, )"
+              "version": "[7.0.2, )"
             }
           },
           "imports": [
