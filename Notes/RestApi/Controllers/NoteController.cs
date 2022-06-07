@@ -135,6 +135,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     Title = noteDto.Title,
                     Description = noteDto.Description,
                     IsDone = noteDto.IsDone,
+                    EventDate = noteDto.EventDate
                 });
 
                 if (result.Note == null)

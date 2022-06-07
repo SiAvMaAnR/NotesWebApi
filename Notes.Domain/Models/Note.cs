@@ -17,6 +17,8 @@ namespace Notes.Domain.Models
 
         public DateTime CreateDate { get; set; }
 
+        public DateTime? EventDate { get; set; }
+
         public bool IsDone { get; set; }
 
         public int UserId { get; set; }

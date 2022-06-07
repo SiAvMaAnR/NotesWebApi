@@ -14,6 +14,8 @@ namespace Notes.DTOs.Controller.Notes
         [StringLength(300, MinimumLength = 0)]
         public string Description { get; set; }
 
+        public DateTime EventDate { get; set; }
+
         [Required]
         public bool IsDone { get; set; }
     }

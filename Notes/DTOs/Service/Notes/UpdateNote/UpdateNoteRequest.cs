@@ -5,11 +5,12 @@ namespace Notes.DTOs.Service.Notes.UpdateNote
 {
     public class UpdateNoteRequest
     {
-        public UpdateNoteRequest(int id,string title, string description, bool isDone)
+        public UpdateNoteRequest(int id,string title, string description, DateTime eventDate, bool isDone)
         {
             Id = id;
             Title = title;
             Description = description;
+            EventDate = eventDate;
             IsDone = isDone;
         }
         public UpdateNoteRequest() { }
@@ -19,6 +20,8 @@ namespace Notes.DTOs.Service.Notes.UpdateNote
 
         [StringLength(100, MinimumLength = 1)]
         public string Title { get; set; }
+
+        public DateTime EventDate { get; set; }
 
         [StringLength(300, MinimumLength = 0)]
         public string Description { get; set; }

@@ -33,6 +33,7 @@ namespace Notes.Services.Notes
                     Title = request.Title,
                     Description = request.Description,
                     IsDone = request.IsDone,
+                    EventDate = request.EventDate,
                     CreateDate = DateTime.Now,
                     User = user
                 };
@@ -130,6 +131,7 @@ namespace Notes.Services.Notes
             {
                 note.Title = request.Title;
                 note.Description = request.Description;
+                note.EventDate = request.EventDate;
                 note.IsDone = request.IsDone;
 
                 await repository.UpdateAsync(note);
