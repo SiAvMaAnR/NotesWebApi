@@ -6,6 +6,7 @@ using Notes.DTOs.Service.Notes.AddNote;
 using Notes.DTOs.Service.Notes.DeleteNote;
 using Notes.DTOs.Service.Notes.GetNote;
 using Notes.DTOs.Service.Notes.GetNotesList;
+using Notes.DTOs.Service.Notes.UpdateDoneNote;
 using Notes.DTOs.Service.Notes.UpdateNote;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Interfaces;
@@ -30,7 +31,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
         }
 
         [HttpGet, Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Get([FromQuery] GetNoteDto getNoteDto)
+        public async Task<IActionResult> Get([FromQuery] GetNoteDto noteDto)
         {
             try
             {
@@ -44,9 +45,9 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
                 var result = await service.GetNotesListAsync(new GetNotesListRequest()
                 {
-                    PageNumber = getNoteDto.PageNumber,
-                    PageSize = getNoteDto.PageSize,
-                    Sort = getNoteDto.Sort
+                    PageNumber = noteDto.PageNumber,
+                    PageSize = noteDto.PageSize,
+                    Sort = noteDto.Sort
                 });
 
                 if (result.Notes == null)
@@ -224,6 +225,55 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     Id = noteDto.Id,
                     Title = noteDto.Title,
                     Description = noteDto.Description,
+                    IsDone = noteDto.IsDone,
+                });
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(new
+                    {
+                        message = "Note not found!",
+                    });
+                }
+
+                return Ok(new
+                {
+                    message = "Success!",
+                });
+            }
+            catch (Exception)
+            {
+                return BadRequest(new
+                {
+                    message = "Failed to update note!"
+                });
+            }
+        }
+
+        [HttpPut("Done"), Authorize(Roles = "Admin,User")]
+        public async Task<IActionResult> Put([FromBody] UpdateDoneNoteDto noteDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new
+                    {
+                        message = "Incorrect data!"
+                    });
+                }
+
+                if (User == null)
+                {
+                    return NotFound(new
+                    {
+                        message = "User not found!"
+                    });
+                }
+
+                var result = await service.UpdateDoneNoteAsync(new UpdateDoneNoteRequest()
+                {
+                    Id = noteDto.Id,
                     IsDone = noteDto.IsDone,
                 });
 
