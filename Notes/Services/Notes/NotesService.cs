@@ -6,6 +6,7 @@ using Notes.DTOs.Service.Notes.AddNote;
 using Notes.DTOs.Service.Notes.DeleteNote;
 using Notes.DTOs.Service.Notes.GetNote;
 using Notes.DTOs.Service.Notes.GetNotesList;
+using Notes.DTOs.Service.Notes.UpdateDoneNote;
 using Notes.DTOs.Service.Notes.UpdateNote;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Infrastructure.Security;
@@ -140,6 +141,22 @@ namespace Notes.Services.Notes
             }
 
             return new UpdateNoteResponse(false);
+        }
+
+        public async Task<UpdateDoneNoteResponse> UpdateDoneNoteAsync(UpdateDoneNoteRequest request)
+        {
+            Note? note = await repository.GetAsync(note => note.Id == request.Id && user!.Id == note.UserId);
+
+            if(note != null)
+            {
+                note.IsDone = request.IsDone;
+
+                await repository.UpdateAsync(note);
+
+                return new UpdateDoneNoteResponse(true);
+            }
+
+            return new UpdateDoneNoteResponse(false);
         }
     }
 }
