@@ -13,8 +13,8 @@ namespace Notes.Infrastructure.Repositories
 {
     public abstract class BaseRepository<TEntity> : IAsyncRepository<TEntity> where TEntity : class
     {
-        private readonly EFContext context;
-        private readonly DbSet<TEntity> dbSet;
+        protected readonly EFContext context;
+        protected readonly DbSet<TEntity> dbSet;
 
         public BaseRepository(EFContext context)
         {
