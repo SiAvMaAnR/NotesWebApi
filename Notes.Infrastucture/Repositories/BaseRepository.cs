@@ -13,8 +13,8 @@ namespace Notes.Infrastructure.Repositories
 {
     public abstract class BaseRepository<TEntity> : IAsyncRepository<TEntity> where TEntity : class
     {
-        private readonly EFContext context;
-        private readonly DbSet<TEntity> dbSet;
+        protected readonly EFContext context;
+        protected readonly DbSet<TEntity> dbSet;
 
         public BaseRepository(EFContext context)
         {
@@ -27,7 +27,7 @@ namespace Notes.Infrastructure.Repositories
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task AddAsync(TEntity entity)
+        public virtual async Task AddAsync(TEntity entity)
         {
             await dbSet.AddAsync(entity);
             await context.SaveChangesAsync();
@@ -38,7 +38,7 @@ namespace Notes.Infrastructure.Repositories
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task UpdateAsync(TEntity entity)
+        public virtual async Task UpdateAsync(TEntity entity)
         {
             dbSet.Update(entity);
             await context.SaveChangesAsync();
@@ -49,7 +49,7 @@ namespace Notes.Infrastructure.Repositories
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task DeleteAsync(TEntity entity)
+        public virtual async Task DeleteAsync(TEntity entity)
         {
             dbSet.Remove(entity);
             await context.SaveChangesAsync();
@@ -60,7 +60,7 @@ namespace Notes.Infrastructure.Repositories
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await dbSet.AsNoTracking()
                 .FirstOrDefaultAsync(predicate);
@@ -72,7 +72,7 @@ namespace Notes.Infrastructure.Repositories
         /// <param name="predicate"></param>
         /// <param name="includeProperties"></param>
         /// <returns></returns>
-        public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate,
+        public virtual async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includeProperties)
         {
             return await dbSet.MultipleInclude(includeProperties)
@@ -85,7 +85,7 @@ namespace Notes.Infrastructure.Repositories
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<TEntity>?> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<IEnumerable<TEntity>?> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await Task.FromResult(dbSet
                 .AsNoTracking()
@@ -96,7 +96,7 @@ namespace Notes.Infrastructure.Repositories
         /// Get list entities
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<TEntity>?> GetAllAsync()
+        public virtual async Task<IEnumerable<TEntity>?> GetAllAsync()
         {
             return await Task.FromResult(dbSet.AsNoTracking());
         }
@@ -106,7 +106,7 @@ namespace Notes.Infrastructure.Repositories
         /// </summary>
         /// <param name="includeProperties"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<TEntity>?> GetAllAsync(params Expression<Func<TEntity, object>>[] includeProperties)
+        public virtual async Task<IEnumerable<TEntity>?> GetAllAsync(params Expression<Func<TEntity, object>>[] includeProperties)
         {
             return await Task.FromResult(dbSet
                 .MultipleInclude(includeProperties)
@@ -119,7 +119,7 @@ namespace Notes.Infrastructure.Repositories
         /// <param name="predicate"></param>
         /// <param name="includeProperties"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<TEntity>?> GetAllAsync(Func<TEntity, bool> predicate,
+        public virtual async Task<IEnumerable<TEntity>?> GetAllAsync(Func<TEntity, bool> predicate,
             params Expression<Func<TEntity, object>>[] includeProperties)
         {
             return await Task.FromResult(dbSet
