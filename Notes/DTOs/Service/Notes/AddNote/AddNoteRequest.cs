@@ -9,7 +9,7 @@ namespace Notes.DTOs.Service.Notes.AddNote
         [StringLength(100, MinimumLength = 1)]
         public string Title { get; set; }
 
-        [StringLength(300, MinimumLength = 0)]
+        [StringLength(1000, MinimumLength = 0)]
         public string Description { get; set; }
 
         public DateTime? EventDate { get; set; }

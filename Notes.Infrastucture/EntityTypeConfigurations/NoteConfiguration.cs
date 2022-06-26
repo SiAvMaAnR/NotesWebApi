@@ -11,7 +11,7 @@ namespace Notes.Infrastructure.EntityTypeConfigurations
             builder.Property(x => x.Title).HasMaxLength(100).IsRequired();
             builder.HasIndex(x => x.Title);
 
-            builder.Property(x => x.Description).HasMaxLength(100);
+            builder.Property(x => x.Description).HasMaxLength(1000);
 
             builder.Property(x => x.IsDone).IsRequired();
         }
