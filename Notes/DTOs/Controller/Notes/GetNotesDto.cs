@@ -2,7 +2,7 @@
 
 namespace Notes.DTOs.Controller.Notes
 {
-    public class GetNoteDto
+    public class GetNotesDto
     {
         [Required]
         public int PageNumber { get; set; }

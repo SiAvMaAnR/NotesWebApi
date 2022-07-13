@@ -21,6 +21,8 @@ namespace Notes.Domain.Models
 
         public bool IsDone { get; set; }
 
+        public bool IsFavorite { get; set; }
+
         public int UserId { get; set; }
 
         public User User { get; set; }

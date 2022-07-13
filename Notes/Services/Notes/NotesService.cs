@@ -5,8 +5,9 @@ using Notes.Domain.Models;
 using Notes.DTOs.Service.Notes.AddNote;
 using Notes.DTOs.Service.Notes.DeleteNote;
 using Notes.DTOs.Service.Notes.GetNote;
-using Notes.DTOs.Service.Notes.GetNotesList;
+using Notes.DTOs.Service.Notes.GetNotes;
 using Notes.DTOs.Service.Notes.UpdateDoneNote;
+using Notes.DTOs.Service.Notes.UpdateFavoriteNote;
 using Notes.DTOs.Service.Notes.UpdateNote;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Infrastructure.Security;
@@ -68,10 +69,13 @@ namespace Notes.Services.Notes
             return new DeleteNoteResponse(false);
         }
 
-        public async Task<GetNotesListResponse> GetNotesListAsync(GetNotesListRequest request)
+        public async Task<GetNotesResponse> GetNotesAsync(GetNotesRequest request)
         {
             IEnumerable<Note>? notes = await repository
-                .GetAllAsync(note => (user?.Id ?? -1) == note.UserId, note => note.User);
+                .GetAllAsync(note =>
+                (user?.Id ?? -1) == note.UserId &&
+                (request.OnlyFavorite ? note.IsFavorite : true),
+                note => note.User);
 
             if (notes != null)
             {
@@ -96,7 +100,7 @@ namespace Notes.Services.Notes
 
                 var tatalPages = (int)Math.Ceiling(((decimal)totalNotes / request.PageSize));
 
-                return new GetNotesListResponse()
+                return new GetNotesResponse()
                 {
                     Notes = result,
                     PageSize = request.PageSize,
@@ -106,7 +110,7 @@ namespace Notes.Services.Notes
                 };
             }
 
-            return new GetNotesListResponse()
+            return new GetNotesResponse()
             {
                 Notes = null,
             };
@@ -147,7 +151,7 @@ namespace Notes.Services.Notes
         {
             Note? note = await repository.GetAsync(note => note.Id == request.Id && user!.Id == note.UserId);
 
-            if(note != null)
+            if (note != null)
             {
                 note.IsDone = request.IsDone;
 
@@ -157,6 +161,22 @@ namespace Notes.Services.Notes
             }
 
             return new UpdateDoneNoteResponse(false);
+        }
+
+        public async Task<UpdateFavoriteNoteResponse> UpdateFavoriteNoteAsync(UpdateFavoriteNoteRequest request)
+        {
+            Note? note = await repository.GetAsync(note => note.Id == request.Id && user!.Id == note.UserId);
+
+            if (note != null)
+            {
+                note.IsFavorite = request.IsFavorite;
+
+                await repository.UpdateAsync(note);
+
+                return new UpdateFavoriteNoteResponse(true);
+            }
+
+            return new UpdateFavoriteNoteResponse(false);
         }
     }
 }

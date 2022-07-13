@@ -5,8 +5,9 @@ using Notes.DTOs.Controller.Notes;
 using Notes.DTOs.Service.Notes.AddNote;
 using Notes.DTOs.Service.Notes.DeleteNote;
 using Notes.DTOs.Service.Notes.GetNote;
-using Notes.DTOs.Service.Notes.GetNotesList;
+using Notes.DTOs.Service.Notes.GetNotes;
 using Notes.DTOs.Service.Notes.UpdateDoneNote;
+using Notes.DTOs.Service.Notes.UpdateFavoriteNote;
 using Notes.DTOs.Service.Notes.UpdateNote;
 using Notes.Infrastructure.ApplicationContext;
 using Notes.Interfaces;
@@ -15,14 +16,14 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class NoteController : ControllerBase
+    public class NotesController : ControllerBase
     {
         private readonly INoteService service;
         private readonly EFContext context;
         private readonly ILogger logger;
         private readonly IConfiguration configuration;
 
-        public NoteController(INoteService service, EFContext context, ILogger<NoteController> logger, IConfiguration configuration)
+        public NotesController(INoteService service, EFContext context, ILogger<NotesController> logger, IConfiguration configuration)
         {
             this.service = service;
             this.context = context;
@@ -30,8 +31,8 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             this.configuration = configuration;
         }
 
-        [HttpGet, Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Get([FromQuery] GetNoteDto noteDto)
+        [HttpGet("Get"), Authorize(Roles = "Admin,User")]
+        public async Task<IActionResult> GetNotes([FromQuery] GetNotesDto noteDto)
         {
             try
             {
@@ -43,11 +44,12 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     });
                 }
 
-                var result = await service.GetNotesListAsync(new GetNotesListRequest()
+                var result = await service.GetNotesAsync(new GetNotesRequest()
                 {
                     PageNumber = noteDto.PageNumber,
                     PageSize = noteDto.PageSize,
-                    Sort = noteDto.Sort
+                    Sort = noteDto.Sort,
+                    OnlyFavorite = false
                 });
 
                 if (result.Notes == null)
@@ -80,8 +82,59 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             }
         }
 
-        [HttpGet("{id:int}"), Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("Get/Favorite"), Authorize(Roles = "Admin,User")]
+        public async Task<IActionResult> GetFavoriteNotes([FromQuery] GetNotesDto noteDto)
+        {
+            try
+            {
+                if (User == null)
+                {
+                    return NotFound(new
+                    {
+                        message = "User not found!"
+                    });
+                }
+
+                var result = await service.GetNotesAsync(new GetNotesRequest()
+                {
+                    PageNumber = noteDto.PageNumber,
+                    PageSize = noteDto.PageSize,
+                    Sort = noteDto.Sort,
+                    OnlyFavorite = true
+                });
+
+                if (result.Notes == null)
+                {
+                    return NotFound(new
+                    {
+                        message = "Notes not found!"
+                    });
+                }
+
+                return Ok(new
+                {
+                    data = new
+                    {
+                        notes = result.Notes,
+                        pageNumber = result.PageNumber,
+                        pageSize = result.PageSize,
+                        totalNotes = result.TotalNotes,
+                        totalPages = result.TotalPages
+                    },
+                    message = "Success!"
+                });
+            }
+            catch (Exception)
+            {
+                return BadRequest(new
+                {
+                    message = "Failed to get notes!"
+                });
+            }
+        }
+
+        [HttpGet("Get/{id:int}"), Authorize(Roles = "Admin,User")]
+        public async Task<IActionResult> GetNote(int id)
         {
             try
             {
@@ -118,8 +171,8 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             }
         }
 
-        [HttpPost, Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Post([FromBody] AddNoteDto noteDto)
+        [HttpPost("Add"), Authorize(Roles = "Admin,User")]
+        public async Task<IActionResult> AddNote([FromBody] AddNoteDto noteDto)
         {
             try
             {
@@ -162,8 +215,8 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             }
         }
 
-        [HttpDelete, Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Delete([FromBody] int id)
+        [HttpDelete("Delete"), Authorize(Roles = "Admin,User")]
+        public async Task<IActionResult> DeleteNote([FromBody] int id)
         {
             try
             {
@@ -199,8 +252,8 @@ namespace Notes.Api.Presentation.RestApi.Controllers
             }
         }
 
-        [HttpPut, Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Put([FromBody] UpdateNoteDto noteDto)
+        [HttpPut("Update"), Authorize(Roles = "Admin,User")]
+        public async Task<IActionResult> UpdateNote([FromBody] UpdateNoteDto noteDto)
         {
             try
             {
@@ -251,7 +304,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
         }
 
         [HttpPut("Done"), Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Put([FromBody] UpdateDoneNoteDto noteDto)
+        public async Task<IActionResult> DoneNote([FromBody] UpdateDoneNoteDto noteDto)
         {
             try
             {
@@ -275,6 +328,55 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                 {
                     Id = noteDto.Id,
                     IsDone = noteDto.IsDone,
+                });
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(new
+                    {
+                        message = "Note not found!",
+                    });
+                }
+
+                return Ok(new
+                {
+                    message = "Success!",
+                });
+            }
+            catch (Exception)
+            {
+                return BadRequest(new
+                {
+                    message = "Failed to update note!"
+                });
+            }
+        }
+
+        [HttpPut("Favorite"), Authorize(Roles ="Admin,User")]
+        public async Task<IActionResult> FavoriteNote([FromBody] UpdateFavoriteNoteDto noteDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new
+                    {
+                        message = "Incorrect data!"
+                    });
+                }
+
+                if (User == null)
+                {
+                    return NotFound(new
+                    {
+                        message = "User not found!"
+                    });
+                }
+
+                var result = await service.UpdateFavoriteNoteAsync(new UpdateFavoriteNoteRequest()
+                {
+                    Id = noteDto.Id,
+                    IsFavorite = noteDto.IsFavorite,
                 });
 
                 if (!result.IsSuccess)

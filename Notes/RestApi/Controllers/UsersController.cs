@@ -14,14 +14,14 @@ namespace Notes.RestApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IUserService service;
         private readonly EFContext context;
         private readonly ILogger logger;
         private readonly IConfiguration configuration;
 
-        public UserController(IUserService service, EFContext context, ILogger<UserController> logger, IConfiguration configuration)
+        public UsersController(IUserService service, EFContext context, ILogger<UsersController> logger, IConfiguration configuration)
         {
             this.service = service;
             this.context = context;
@@ -29,7 +29,7 @@ namespace Notes.RestApi.Controllers
             this.configuration = configuration;
         }
 
-        [HttpGet, Authorize(Roles = "Admin")]
+        [HttpGet("Get"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> Get([Required] int pageNumber, [Required] int pageSize)
         {
             try
@@ -64,7 +64,7 @@ namespace Notes.RestApi.Controllers
             }
         }
 
-        [HttpGet("{id:int}"), Authorize(Roles = "Admin")]
+        [HttpGet("Get/{id:int}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> Get(int id)
         {
             try
@@ -92,7 +92,7 @@ namespace Notes.RestApi.Controllers
             }
         }
 
-        [HttpPut("/api/User"), Authorize(Roles = "Admin")]
+        [HttpPut("Update"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> Put([FromBody] UpdateRoleUserDto updateRoleUserDto)
         {
             try
@@ -125,7 +125,7 @@ namespace Notes.RestApi.Controllers
             }
         }
 
-        [HttpDelete("/api/User"), Authorize(Roles = "Admin")]
+        [HttpDelete("Delete"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromBody] int id)
         {
             try
