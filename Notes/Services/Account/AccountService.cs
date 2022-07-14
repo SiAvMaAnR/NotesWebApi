@@ -1,6 +1,7 @@
 ﻿using Notes.Domain.Enums;
 using Notes.Domain.Models;
 using Notes.DTOs.Service.Account.Edit;
+using Notes.DTOs.Service.Account.Info;
 using Notes.DTOs.Service.Account.Login;
 using Notes.DTOs.Service.Account.Register;
 using Notes.Infrastructure.ApplicationContext;
@@ -17,11 +18,17 @@ namespace Notes.Services.Account
         {
         }
 
+        public async Task<InfoResponse> GetInfoAccountAsync(InfoRequest request)
+        {
+            return new InfoResponse(User);
+        }
+
         public async Task<EditResponse> EditAccountAsync(EditRequest request)
         {
             if (this.user != null)
             {
                 user.Login = request.Login;
+                user.Image = request.Image;
                 user.Person.Firstname = request.Firstname;
                 user.Person.Surname = request.Surname;
                 user.Person.Age = request.Age;
@@ -46,7 +53,7 @@ namespace Notes.Services.Account
                 IsVerify = isVerify,
                 Token = (isVerify) ? await AuthOptions.CreateTokenAsync(user, new Dictionary<string, string>()
                 {
-                    {"secretKey",configuration.GetSection("Authorization:SecretKey").Value },
+                    {"secretKey", configuration.GetSection("Authorization:SecretKey").Value },
                     {"audience", configuration.GetSection("Authorization:Audience").Value },
                     {"issuer" , configuration.GetSection("Authorization:Issuer").Value},
                     {"lifeTime" , configuration.GetSection("Authorization:LifeTime").Value},
@@ -62,6 +69,7 @@ namespace Notes.Services.Account
                 {
                     Email = request.Email,
                     Login = request.Login,
+                    Image = request.Image,
                     PasswordHash = passwordHash!,
                     PasswordSalt = passwordSalt!,
                     Role = Role.User.ToString(),

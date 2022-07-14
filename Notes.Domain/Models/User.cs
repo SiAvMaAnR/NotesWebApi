@@ -23,6 +23,8 @@ namespace Notes.Domain.Models
 
         public string Role { get; set; }
 
+        public byte[] Image { get; set; }
+
         public Person Person { get; set; }
 
         public int PersonId { get; set; }

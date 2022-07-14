@@ -19,5 +19,8 @@ namespace Notes.DTOs.Controller.Account
         [Range(1, 150)]
         [Required]
         public int Age { get; set; }
+
+        [Required]
+        public byte[] Image { get; set; }
     }
 }

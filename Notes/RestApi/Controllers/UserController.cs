@@ -14,14 +14,14 @@ namespace Notes.RestApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly IUserService service;
         private readonly EFContext context;
         private readonly ILogger logger;
         private readonly IConfiguration configuration;
 
-        public UsersController(IUserService service, EFContext context, ILogger<UsersController> logger, IConfiguration configuration)
+        public UserController(IUserService service, EFContext context, ILogger<UserController> logger, IConfiguration configuration)
         {
             this.service = service;
             this.context = context;
@@ -30,7 +30,7 @@ namespace Notes.RestApi.Controllers
         }
 
         [HttpGet("Get"), Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Get([Required] int pageNumber, [Required] int pageSize)
+        public async Task<IActionResult> GetUsers([Required] int pageNumber, [Required] int pageSize)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace Notes.RestApi.Controllers
         }
 
         [HttpGet("Get/{id:int}"), Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetUser(int id)
         {
             try
             {
@@ -93,7 +93,7 @@ namespace Notes.RestApi.Controllers
         }
 
         [HttpPut("Update"), Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Put([FromBody] UpdateRoleUserDto updateRoleUserDto)
+        public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleUserDto updateRoleUserDto)
         {
             try
             {
@@ -126,7 +126,7 @@ namespace Notes.RestApi.Controllers
         }
 
         [HttpDelete("Delete"), Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete([FromBody] int id)
+        public async Task<IActionResult> DeleteUser([FromBody] int id)
         {
             try
             {

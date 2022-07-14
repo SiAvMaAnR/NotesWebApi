@@ -22,4 +22,8 @@
     <ProjectReference Include="..\Notes.Infrastucture\Notes.Infrastucture.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Images\" />
+  </ItemGroup>
+
 </Project>

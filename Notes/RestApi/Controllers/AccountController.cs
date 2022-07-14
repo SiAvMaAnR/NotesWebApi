@@ -5,6 +5,7 @@ using Notes.Domain.Enums;
 using Notes.Domain.Models;
 using Notes.DTOs.Controller.Account;
 using Notes.DTOs.Service.Account.Edit;
+using Notes.DTOs.Service.Account.Info;
 using Notes.DTOs.Service.Account.Login;
 using Notes.DTOs.Service.Account.Register;
 using Notes.Infrastructure.ApplicationContext;
@@ -34,13 +35,13 @@ namespace Notes.Api.Presentation.RestApi.Controllers
         }
 
         [HttpGet("Info"), Authorize]
-        public IActionResult Get()
+        public async Task<IActionResult> GetInfoAsync()
         {
             try
             {
-                var user = service.User;
+                var result = await service.GetInfoAccountAsync(new InfoRequest());
 
-                if (user == null)
+                if (result.User == null)
                     return NotFound(new
                     {
                         message = "Account not found!"
@@ -48,7 +49,10 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 
                 return Ok(new
                 {
-                    data = new { user = user },
+                    data = new
+                    {
+                        user = result.User,
+                    },
                     message = "Success!"
                 });
             }
@@ -62,7 +66,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Post([FromBody] RegisterDto register)
+        public async Task<IActionResult> RegisterAsync([FromBody] RegisterDto register)
         {
             try
             {
@@ -85,7 +89,8 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     Password = register.Password,
                     Firstname = register.Firstname,
                     Surname = register.Surname,
-                    Age = register.Age
+                    Age = register.Age,
+                    Image = System.IO.File.ReadAllBytes(@"D:\source\repos\Notes\NotesWebApi\Notes\Images\avatar.jpg")
                 });
 
                 if (result.IsAdded)
@@ -112,7 +117,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Post([FromBody] LoginDto login)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginDto login)
         {
             try
             {
@@ -155,7 +160,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
         }
 
         [HttpPut("Edit"), Authorize]
-        public async Task<IActionResult> Put([FromBody] EditDto edit)
+        public async Task<IActionResult> EditAsync([FromBody] EditDto edit)
         {
             try
             {
@@ -171,6 +176,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     Firstname = edit.Firstname,
                     Surname = edit.Surname,
                     Age = edit.Age,
+                    Image = edit.Image
                 });
                 if (!result.IsSuccess) throw new Exception();
 

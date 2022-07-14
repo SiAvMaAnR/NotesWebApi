@@ -11,9 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{6F5856
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{AD56994B-87CD-4D9C-AE6D-09DE7FA12F68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notes.Domain", "Notes.Domain\Notes.Domain.csproj", "{DEC7059C-A42B-4266-B008-CFCECFCEFFEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notes.Domain", "Notes.Domain\Notes.Domain.csproj", "{DEC7059C-A42B-4266-B008-CFCECFCEFFEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notes.Infrastucture", "Notes.Infrastucture\Notes.Infrastucture.csproj", "{3BEDB150-400E-4E8B-AFBE-DFB2C4057762}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notes.Infrastucture", "Notes.Infrastucture\Notes.Infrastucture.csproj", "{3BEDB150-400E-4E8B-AFBE-DFB2C4057762}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{B08B452A-187A-4F51-8E0B-20B94AC70F0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "y0rDkRJY4ExEwMh/mTG9j2L+1xihMhkjTj4wL3hkrpmym2Sbb2eoPbQQoJ+KNj5J2ed8T1wlStTro1pkMJD3Eg==",
+  "success": true,
+  "projectFilePath": "D:\\source\\repos\\Notes\\NotesWebApi\\ImageTool\\ImageTool.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\dunduk\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
+    "C:\\Users\\dunduk\\.nuget\\packages\\system.drawing.common\\6.0.0\\system.drawing.common.6.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

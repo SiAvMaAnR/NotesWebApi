@@ -6,6 +6,8 @@
 
         public string Login { get; set; }
 
+        public byte[] Image { get; set; }
+
         public string Password { get; set; }
 
         public string Firstname { get; set; }

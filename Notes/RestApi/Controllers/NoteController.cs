@@ -16,14 +16,14 @@ namespace Notes.Api.Presentation.RestApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class NotesController : ControllerBase
+    public class NoteController : ControllerBase
     {
         private readonly INoteService service;
         private readonly EFContext context;
         private readonly ILogger logger;
         private readonly IConfiguration configuration;
 
-        public NotesController(INoteService service, EFContext context, ILogger<NotesController> logger, IConfiguration configuration)
+        public NoteController(INoteService service, EFContext context, ILogger<NoteController> logger, IConfiguration configuration)
         {
             this.service = service;
             this.context = context;
