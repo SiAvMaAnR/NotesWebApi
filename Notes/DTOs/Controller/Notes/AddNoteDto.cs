@@ -15,5 +15,7 @@ namespace Notes.DTOs.Controller.Notes
 
         [Required]
         public bool IsDone { get; set; }
+
+        public bool IsFavorite { get; set; }
     }
 }

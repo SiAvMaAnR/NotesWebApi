@@ -37,6 +37,7 @@ namespace Notes.Services.Notes
                     IsDone = request.IsDone,
                     EventDate = request.EventDate,
                     CreateDate = DateTime.Now,
+                    IsFavorite = request.IsFavorite,
                     User = user
                 };
 

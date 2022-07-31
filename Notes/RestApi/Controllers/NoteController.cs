@@ -189,6 +189,7 @@ namespace Notes.Api.Presentation.RestApi.Controllers
                     Title = noteDto.Title,
                     Description = noteDto.Description,
                     IsDone = noteDto.IsDone,
+                    IsFavorite = noteDto.IsFavorite,
                     EventDate = noteDto.EventDate
                 });
 

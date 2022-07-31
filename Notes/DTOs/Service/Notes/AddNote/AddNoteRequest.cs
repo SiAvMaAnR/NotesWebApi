@@ -13,8 +13,9 @@ namespace Notes.DTOs.Service.Notes.AddNote
         public string Description { get; set; }
 
         public DateTime? EventDate { get; set; }
-
         [Required]
         public bool IsDone { get; set; }
+
+        public bool IsFavorite { get; set; }
     }
 }
